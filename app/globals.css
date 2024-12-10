@@ -35,12 +35,12 @@ body {
   width: 100px;
 }
 
-.white-square {
-  background-color: black;
-  color: white;
+.black-square {
+  background-color: #000;
+  color: #fff;
 }
 
-.black-square {
-  background-color: white;
-  /* color: white; */
+.white-square {
+  background-color: #fff;
+  color: #000;
 }
