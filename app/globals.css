@@ -19,3 +19,28 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.layout {
+  padding: 1rem;
+  background-color: #efefef;
+}
+
+.checkerboard {
+  display: grid;
+  grid-template-columns: repeat(8, 100px);
+}
+
+.square {
+  height: 100px;
+  width: 100px;
+}
+
+.white-square {
+  background-color: black;
+  color: white;
+}
+
+.black-square {
+  background-color: white;
+  /* color: white; */
+}
