@@ -1,28 +1,41 @@
 import { PieceId } from "./components/GamePiece";
 import { calculateGamePieceMoves } from "./move-options";
 
-/** Given the state of the game. Determine if either king are in check */
+/**
+ * Given the state of the game. Determine if either king are in check.
+ *
+ * The second boolean value will indcate if the check represents checkmate
+ */
 export function areKingsInCheck(
   activePieces: Partial<Record<PieceId, number>>
-): Array<"black" | "white" | "none"> {
-  const inCheck: Array<"black" | "white" | "none"> = []
-  
+): ["black" | "white" | "none", boolean] {
   // I'm casting these becase they are always there. If they weren't the game would be over
   const blackKingPosition = activePieces["blk-k"] as number;
   const whiteKingPosition = activePieces["wh-k"] as number;
 
-  // 
-  for (const gamePieceKey of Object.keys(activePieces).filter(pieceKey => pieceKey !== 'bl-k' && pieceKey !== 'wh-k')) {
-    const availableMoves = calculateGamePieceMoves(gamePieceKey as PieceId, activePieces)
+  // Determine if any of the existing game pieces can strike the king pieces
+  for (const gamePieceKey of Object.keys(activePieces).filter(
+    (pieceKey) => pieceKey !== "bl-k" && pieceKey !== "wh-k"
+  )) {
+    const availableMoves = calculateGamePieceMoves(
+      gamePieceKey as PieceId,
+      activePieces
+    );
 
     if (availableMoves.includes(blackKingPosition)) {
-      inCheck.push('black')
+      return [
+        "black",
+        calculateGamePieceMoves("blk-k", activePieces).length <= 1,
+      ];
     }
 
     if (availableMoves.includes(whiteKingPosition)) {
-      inCheck.push('white')
+      return [
+        "white",
+        calculateGamePieceMoves("wh-k", activePieces).length === 0,
+      ];
     }
   }
-  
-  return inCheck.length === 0 ? ['none'] : inCheck;
+
+  return ["none", false];
 }

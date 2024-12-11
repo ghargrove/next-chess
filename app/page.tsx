@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useReducer, useState } from "react";
+import React, { useEffect, useReducer } from "react";
 import { Dashboard, Gameboard } from "./components";
 import { PieceId } from "./components/GamePiece";
 import { blitzkriegState, initialState } from "./data";
@@ -10,8 +10,8 @@ import { areKingsInCheck } from "./check-check";
 interface State {
   activePieces: Partial<typeof initialState>;
   capturedPieces: PieceId[];
-  inCheck: Array<'black' | 'white'>
-  inCheckMate: 'black' | 'white' | null
+  inCheck: 'black' | 'white' | null
+  inCheckMate: boolean
   turn: "black" | "white";
 }
 
@@ -43,7 +43,14 @@ function reducer(state: State, action: Action): State {
       [pieceId]: position,
     };
 
-    console.log(areKingsInCheck(nextActivePieces))
+    // Given the next state of the board, 
+    const [kingColor, isCheckmate] = areKingsInCheck(nextActivePieces)
+    let inCheck: 'black' | 'white' | null = null 
+    if (kingColor === 'black') {
+      inCheck = 'black'
+    } else if (kingColor === 'white') {
+      inCheck = 'white'
+    }
   
     return {
       ...state,
@@ -52,7 +59,8 @@ function reducer(state: State, action: Action): State {
         ...state.capturedPieces,
         ...(pieceCaptured !== undefined ? [pieceCaptured] : []),
       ],
-      // Toggle the turn
+      inCheck,
+      inCheckMate: isCheckmate,
       turn: state.turn === "black" ? "white" : "black",
     };
   }
@@ -69,16 +77,24 @@ function reducer(state: State, action: Action): State {
 }
 
 export default function Home() {
-  const [{ activePieces, capturedPieces, turn }, dispatch] = useReducer(
+  const [{ activePieces, capturedPieces, inCheck, inCheckMate, turn }, dispatch] = useReducer(
     reducer,
     {
       activePieces: blitzkriegState,
       capturedPieces: [],
-      inCheck: [],
-      inCheckMate: null, 
+      inCheck: null,
+      inCheckMate: false, 
       turn: "white",
     }
   );
+
+  useEffect(() => {
+    if (inCheckMate) {
+      window.alert(`Checkmate ${inCheck}!`)
+      
+      dispatch({ type: "RESET_GAME" });
+    }
+  }, [dispatch, inCheck, inCheckMate])
 
   // Reset the board when a user clicks this button
   const handleResetClick: React.MouseEventHandler<HTMLButtonElement> = (
