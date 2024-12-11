@@ -13,3 +13,8 @@ export function isOnRightBoundary(position: number): boolean {
 export function isOnTopBoundary(position: number): boolean {
   return [0, 1, 2, 3, 4, 5, 6, 7].includes(position)
 }
+
+/** Determines if the `position` is along the bottom boundary of the board */
+export function isOnBottomBoundary(position: number): boolean {
+  return [56, 57, 58, 59, 60, 61, 62, 63].includes(position)
+}
