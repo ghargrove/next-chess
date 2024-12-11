@@ -3,7 +3,7 @@
 import React, { useEffect, useReducer } from "react";
 import { Dashboard, Gameboard } from "./components";
 import { PieceId } from "./components/GamePiece";
-import { blitzkriegState, initialState } from "./data";
+import { blitzkriegState, blitzkriegStateReverse, initialState } from "./data";
 import { areKingsInCheck } from "./check-check";
 
 /** Represents game state */
@@ -84,7 +84,7 @@ export default function Home() {
     { activePieces, capturedPieces, inCheck, inCheckMate, turn },
     dispatch,
   ] = useReducer(reducer, {
-    activePieces: blitzkriegState,
+    activePieces: blitzkriegStateReverse,
     capturedPieces: [],
     inCheck: null,
     inCheckMate: false,
@@ -127,7 +127,7 @@ export default function Home() {
     <div className="layout">
       <div>
         <Gameboard
-        debug
+          debug
           currentTurn={turn}
           piecePositions={activePieces}
           onPiecePositionChange={handlePiecePositionChange}

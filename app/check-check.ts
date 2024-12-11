@@ -1,5 +1,8 @@
 import { PieceId } from "./components/GamePiece";
-import { calculateGamePieceMoves, invertAndMapPieceState } from "./move-options";
+import {
+  calculateGamePieceMoves,
+  invertAndMapPieceState,
+} from "./move-options";
 
 /**
  * Given the state of the game. Determine if either king are in check.
@@ -28,40 +31,71 @@ export function areKingsInCheck(
         "blk-k",
         activePieces
       );
-      
+
       // This is super long winded and inefficient, but works for now
       for (const remainingMove of kingsRemainingMoves) {
-        const positionMap = invertAndMapPieceState(activePieces)
+        const positionMap = invertAndMapPieceState(activePieces);
         // Simulate that move
-        const keyToCheck = positionMap.get(remainingMove)
-        const simGameBoard = { ...activePieces, "blk-k": remainingMove};
+        const keyToCheck = positionMap.get(remainingMove);
+        const simGameBoard = { ...activePieces, "blk-k": remainingMove };
         if (keyToCheck !== undefined) {
-          delete simGameBoard[keyToCheck]
+          delete simGameBoard[keyToCheck];
         }
 
         // Search through the remaining pieces and see if the king has any moves left
         for (const gamePieceKey of Object.keys(simGameBoard).filter(
           (pieceKey) => pieceKey !== "bl-k" && pieceKey !== "wh-k"
         )) {
-          const pieceMovesSet = new Set(calculateGamePieceMoves(gamePieceKey as PieceId, simGameBoard));
+          const pieceMovesSet = new Set(
+            calculateGamePieceMoves(gamePieceKey as PieceId, simGameBoard)
+          );
           const remainingMoveSet = new Set(kingsRemainingMoves);
-          
+
           // Slice out shared moves
-          for (const ent of pieceMovesSet.intersection(remainingMoveSet).values()) {
+          for (const ent of pieceMovesSet
+            .intersection(remainingMoveSet)
+            .values()) {
             kingsRemainingMoves.splice(kingsRemainingMoves.indexOf(ent), 1);
           }
         }
-  
       }
 
       return ["black", kingsRemainingMoves.length === 0];
     }
 
     if (availableMoves.includes(whiteKingPosition)) {
-      return [
-        "white",
-        calculateGamePieceMoves("wh-k", activePieces).length === 0,
-      ];
+      // What possible moves does the king have
+      const kingsRemainingMoves = calculateGamePieceMoves("wh-k", activePieces);
+
+      // This is super long winded and inefficient, but works for now
+      for (const remainingMove of kingsRemainingMoves) {
+        const positionMap = invertAndMapPieceState(activePieces);
+        // Simulate that move
+        const keyToCheck = positionMap.get(remainingMove);
+        const simGameBoard = { ...activePieces, "wh-k": remainingMove };
+        if (keyToCheck !== undefined) {
+          delete simGameBoard[keyToCheck];
+        }
+
+        // Search through the remaining pieces and see if the king has any moves left
+        for (const gamePieceKey of Object.keys(simGameBoard).filter(
+          (pieceKey) => pieceKey !== "bl-k" && pieceKey !== "wh-k"
+        )) {
+          const pieceMovesSet = new Set(
+            calculateGamePieceMoves(gamePieceKey as PieceId, simGameBoard)
+          );
+          const remainingMoveSet = new Set(kingsRemainingMoves);
+
+          // Slice out shared moves
+          for (const ent of pieceMovesSet
+            .intersection(remainingMoveSet)
+            .values()) {
+            kingsRemainingMoves.splice(kingsRemainingMoves.indexOf(ent), 1);
+          }
+        }
+      }
+
+      return ["white", kingsRemainingMoves.length === 0];
     }
   }
 
