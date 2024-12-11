@@ -1,8 +1,11 @@
 import { expect, it } from "@jest/globals";
 
-it("is expected to test", () => {
+import { movePawn } from './move-options'
 
-  
+it("allows a black pawn to move forward", () => {
+  expect(movePawn('blk', 48)).toEqual([40]);
+});
 
-  expect(true).toBe(true);
+it("allows a white pawn to move forward", () => {
+  expect(movePawn('wh', 8)).toEqual([16]);
 });
