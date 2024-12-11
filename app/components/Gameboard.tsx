@@ -7,12 +7,20 @@ import { GamePiece, PieceId } from "./GamePiece";
 type SquareType = "black-square" | "white-square";
 
 
+interface GameboardProps {
+  /** Describes where on the board the pieces are positioned */
+  piecePositions: Record<PieceId, number>
+  /** Update the piece position */
+  onPiecePositionChange: React.Dispatch<React.SetStateAction<Record<PieceId, number>>>
+}
 
-export const Gameboard: React.FC = () => {
-  const [gameState, setGameState] = useState(initialState)
+/** Presents a gameboard */
+export const Gameboard: React.FC<GameboardProps> = (props) => {
+  const { piecePositions, onPiecePositionChange } = props
+  
   
   const invertedPieces = Array.from(
-    Object.entries(gameState) as [PieceId, number][]
+    Object.entries(piecePositions) as [PieceId, number][]
   ).map<[number, PieceId]>(([k, v]) => [v, k]);
 
   const pieceMap = new Map(invertedPieces);
@@ -64,7 +72,7 @@ export const Gameboard: React.FC = () => {
     (pos) => (evt) => {
       const pieceId = evt.dataTransfer.getData("text/plain")
 
-      setGameState(currentGameState => ({
+      onPiecePositionChange(currentGameState => ({
         ...currentGameState,
         [pieceId]: pos
       }))
