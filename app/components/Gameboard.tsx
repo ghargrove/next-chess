@@ -11,8 +11,8 @@ interface GameboardProps {
   debug?: boolean
   /** Describes where on the board the pieces are positioned */
   piecePositions: Record<PieceId, number>
-  /** Update the piece position */
-  onPiecePositionChange: React.Dispatch<React.SetStateAction<Record<PieceId, number>>>
+  /** Update the piece to the `position` */
+  onPiecePositionChange: (pieceId: PieceId, position: number) => void
 }
 
 /** Presents a gameboard */
@@ -77,10 +77,7 @@ export const Gameboard: React.FC<GameboardProps> = (props) => {
       
       // If the piece was dropped on a legal space then update the game board
       if (legalMoves.includes(pos)) {
-        onPiecePositionChange(currentGameState => ({
-          ...currentGameState,
-          [pieceId]: pos
-        }))
+        onPiecePositionChange(pieceId, pos)
       }      
     };
 
