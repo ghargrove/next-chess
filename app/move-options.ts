@@ -318,7 +318,7 @@ function moveKnight(
     currentPosition - 8 * 1 + 1,
     currentPosition - 8 * 1 + 2,
   ];
-  const upOneRBool = upOneL.map(
+  const upOneRBool = upOneR.map(
     (_i) => isOnTopBoundary(_i) || isOnRightBoundary(_i)
   );
   if (upOneRBool.indexOf(true) <= -1 || upOneRBool.indexOf(true) >= 2) {
@@ -341,7 +341,7 @@ function moveKnight(
     currentPosition + (8 * 1 - 2),
   ];
   const downOneLBool = downOneL.map(
-    (_i) => isOnTopBoundary(_i) || isOnLeftBoundary(_i)
+    (_i) => isOnBottomBoundary(_i) || isOnLeftBoundary(_i)
   );
   if (downOneLBool.indexOf(true) <= -1 || downOneLBool.indexOf(true) >= 2) {
     const dest = downOneL[2];
@@ -362,8 +362,8 @@ function moveKnight(
     currentPosition + 8 * 1 + 1,
     currentPosition + (8 * 1 + 2),
   ];
-  const downOneRBool = downOneL.map(
-    (_i) => isOnTopBoundary(_i) || isOnRightBoundary(_i)
+  const downOneRBool = downOneR.map(
+    (_i) => isOnBottomBoundary(_i) || isOnRightBoundary(_i)
   );
   if (downOneRBool.indexOf(true) <= -1 || downOneRBool.indexOf(true) >= 2) {
     const dest = downOneR[2];
@@ -428,7 +428,7 @@ function moveKnight(
     currentPosition + 8 * 2,
     currentPosition + (8 * 2 - 1),
   ];
-  const downTwoLBool = upTwoL.map(
+  const downTwoLBool = downTwoL.map(
     (_i) => isOnBottomBoundary(_i) || isOnLeftBoundary(_i)
   );
   if (downTwoLBool.indexOf(true) <= -1 || downTwoLBool.indexOf(true) >= 2) {
@@ -450,7 +450,7 @@ function moveKnight(
     currentPosition + 8 * 2,
     currentPosition + (8 * 2 + 1),
   ];
-  const downTwoRBool = upTwoL.map(
+  const downTwoRBool = downTwoR.map(
     (_i) => isOnBottomBoundary(_i) || isOnRightBoundary(_i)
   );
   if (downTwoRBool.indexOf(true) <= -1 || downTwoRBool.indexOf(true) >= 2) {
