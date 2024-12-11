@@ -73,6 +73,26 @@ export const Gameboard: React.FC = () => {
     return rows;
   }, []);
 
+  const handleDrag: React.DragEventHandler<HTMLDivElement> = (evt) => {
+    evt.dataTransfer.dropEffect = 'move';
+
+    // Add the piece id to the event
+    const { pieceId } = evt.currentTarget.dataset
+    if (pieceId !== undefined) {
+      evt.dataTransfer.setData('text/plain', pieceId);
+    }
+  }
+
+  const handleDragOver: (pos: number) => React.DragEventHandler<HTMLDivElement> = (pos) => (evt) => {
+    console.log('drag over -->', pos)
+
+    evt.preventDefault()
+  }
+
+  const handleDrop: (pos: number) => React.DragEventHandler<HTMLDivElement> = (pos) => (evt) => {
+    console.log('on drop', evt.dataTransfer.getData('text/plain'), pos)
+  }
+
   return (
     <div className="checkerboard">
       {cellMatrix.map((row, rowIdx) => {
@@ -86,8 +106,10 @@ export const Gameboard: React.FC = () => {
             <div
               key={rowIdx + "-" + colIdx}
               className={`square ${col}`}
+              onDragOver={handleDragOver(boardPos)}
+              onDrop={handleDrop(boardPos)}
             >
-              {pieceId !== undefined && <GamePiece pieceId={pieceId} />}
+              {pieceId !== undefined && <div draggable data-piece-id={pieceId} onDragStart={handleDrag}><GamePiece pieceId={pieceId} /></ div>}
             </div>
           );
         });
