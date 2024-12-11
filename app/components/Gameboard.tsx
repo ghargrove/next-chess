@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { GamePiece, PieceId } from "./GamePiece";
-import { calculateGamePieceMoves } from "../move-options";
+import { calculateGamePieceMoves, invertAndMapPieceState } from "../move-options";
 
 type SquareType = "black-square" | "white-square";
 
@@ -32,12 +32,7 @@ export const Gameboard: React.FC<GameboardProps> = (props) => {
 
   // Tracks which cells are legal moves during a drag operation
   const [legalMoves, setLegalMoves] = useState<number[]>([]);
-
-  const invertedPieces = Array.from(
-    Object.entries(piecePositions) as [PieceId, number][]
-  ).map<[number, PieceId]>(([k, v]) => [v, k]);
-
-  const pieceMap = new Map(invertedPieces);
+  const pieceMap = invertAndMapPieceState(piecePositions);
 
   const cellMatrix = useMemo(() => {
     const rows: SquareType[][] = [];
