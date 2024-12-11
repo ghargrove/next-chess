@@ -1,15 +1,7 @@
 "use client";
 
-import Image from "next/image";
-import { GamePiece, PieceId } from "./GamePiece";
-import pawnBlack from "../../public/images/pawn-black.svg";
-// import rookBlack from '../public/images/rook-black.svg';
-// import knightBlack from '../public/images/knight-black.svg';
-// import bishopBlack from '../public/images/bishop-black.svg';
-// import queenBlack from '../public/images/queen-black.svg';
-// import kingBlack from '../public/images/king-black.svg';
-
 import { useMemo } from "react";
+import { GamePiece, PieceId } from "./GamePiece";
 
 type SquareType = "black-square" | "white-square";
 
@@ -17,11 +9,6 @@ interface GameboardProps {
   clicks: Record<string, number>;
   onItemClick: (v: [number, number]) => void;
 }
-
-// How are we going to represent the game state?
-// - A piece has an id b-p1, b-p2, b-p3 - b-p8, b-r1, b-r2, blk-kn1, wh-kn2, b-1, b-2, q-1, k-1
-// - each board cell has an index 0 - 63, -1 (out)
-// - how can we easily show game pieces removed from the game?
 
 export const Gameboard: React.FC<GameboardProps> = (props) => {
   const { clicks, onItemClick } = props;
@@ -63,11 +50,9 @@ export const Gameboard: React.FC<GameboardProps> = (props) => {
     "wh-k": 59,
   };
 
-  // How best can we map the points in the `gameState` to the points in the board?
-
-  const invertedPieces = Array.from(Object.entries(gameState) as [PieceId, number][]).map<
-    [number, PieceId]
-  >(([k, v]) => [v, k]);
+  const invertedPieces = Array.from(
+    Object.entries(gameState) as [PieceId, number][]
+  ).map<[number, PieceId]>(([k, v]) => [v, k]);
 
   const pieceMap = new Map(invertedPieces);
 
@@ -100,9 +85,8 @@ export const Gameboard: React.FC<GameboardProps> = (props) => {
         return row.map((col, colIdx) => {
           // Calculate the position on the board for the current cell & see
           // if there is a piece at that point
-          const boardPos = (rowIdx * 8) + colIdx
+          const boardPos = rowIdx * 8 + colIdx;
           const pieceId = pieceMap.get(boardPos);
-
 
           return (
             <div
