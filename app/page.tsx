@@ -3,7 +3,8 @@
 import React, { useReducer, useState } from "react";
 import { Dashboard, Gameboard } from "./components";
 import { PieceId } from "./components/GamePiece";
-import { initialState } from "./data";
+import { blitzkriegState, initialState } from "./data";
+import { areKingsInCheck } from "./check-check";
 
 /** Represents game state */
 interface State {
@@ -35,12 +36,16 @@ function reducer(state: State, action: Action): State {
       delete activePieceDup[pieceCaptured];
     }
 
+    const nextActivePieces = {
+      ...activePieceDup,
+      [pieceId]: position,
+    };
+
+    console.log(areKingsInCheck(nextActivePieces))
+  
     return {
       ...state,
-      activePieces: {
-        ...activePieceDup,
-        [pieceId]: position,
-      },
+      activePieces: nextActivePieces,
       capturedPieces: [
         ...state.capturedPieces,
         ...(pieceCaptured !== undefined ? [pieceCaptured] : []),
@@ -65,7 +70,7 @@ export default function Home() {
   const [{ activePieces, capturedPieces, turn }, dispatch] = useReducer(
     reducer,
     {
-      activePieces: initialState,
+      activePieces: blitzkriegState,
       capturedPieces: [],
       turn: "white",
     }

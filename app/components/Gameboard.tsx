@@ -115,7 +115,7 @@ export const Gameboard: React.FC<GameboardProps> = (props) => {
           // if there is a piece at that point
           const boardPos = rowIdx * 8 + colIdx;
           const pieceId = pieceMap.get(boardPos);
-
+          
           return (
             <div
               key={rowIdx + "-" + colIdx}
