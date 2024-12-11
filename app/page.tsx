@@ -10,6 +10,8 @@ import { areKingsInCheck } from "./check-check";
 interface State {
   activePieces: Partial<typeof initialState>;
   capturedPieces: PieceId[];
+  inCheck: Array<'black' | 'white'>
+  inCheckMate: 'black' | 'white' | null
   turn: "black" | "white";
 }
 
@@ -72,6 +74,8 @@ export default function Home() {
     {
       activePieces: blitzkriegState,
       capturedPieces: [],
+      inCheck: [],
+      inCheckMate: null, 
       turn: "white",
     }
   );
@@ -103,7 +107,6 @@ export default function Home() {
     <div className="layout">
       <div>
         <Gameboard
-          debug
           currentTurn={turn}
           piecePositions={activePieces}
           onPiecePositionChange={handlePiecePositionChange}
