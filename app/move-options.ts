@@ -9,6 +9,7 @@ const colorRegEx = /^(blk|wh)-.*$/;
 const pawnRegex = /^(blk|wh)-p([1-8])$/;
 const rookRegex = /^(blk|wh)-r[1-2]$/;
 const knightRegex = /^(blk|wh)-kn[1-2]$/;
+const bishopRegex = /^(blk|wh)-b[1-2]$/;
 
 /**
  * Inverts the key/value pairs from the active pieces hash and converts to a Map
@@ -39,6 +40,10 @@ export function calculateGamePieceMoves(
 
   if (knightRegex.test(pieceId)) {
     return moveKnight(pieceId, gameState).sort();
+  }
+
+  if (bishopRegex.test(pieceId)) {
+    return moveBishop(pieceId, gameState).sort();
   }
 
   return [];
@@ -467,6 +472,13 @@ function moveKnight(
   }
 
   return positions;
+}
+
+function moveBishop(pieceId: PieceId,
+gameState: Partial<Record<PieceId, number>>
+): number[] {
+
+  return []
 }
 
 // Get a color from a piece id
