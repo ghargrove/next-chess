@@ -1,6 +1,8 @@
 
 ## Chess <> React
 
+![Chess board](/game-image.png)
+
 Wanted to play around with React a bit. So I built a chess game ♟️.
 
 To get started, download the depenedencies and run the development server:
