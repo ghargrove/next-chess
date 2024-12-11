@@ -56,6 +56,20 @@ function movePawn(pieceId: PieceId, gameState: Record<PieceId, number>) {
           positions.push(onePositionForward - 1)
         }
       }
+    }
+
+    const pieceToRight = invertedPieces.get(onePositionForward + 1)
+    if (pieceToRight) {
+      const x = colorRegEx.exec(pieceToRight)
+
+      if (x !== null) {
+        const [_, rightPieceColor] = x
+
+        // If it's not the same color, we can move there
+        if (rightPieceColor !== color) {
+          positions.push(onePositionForward + 1)
+        }
+      }
 
       // Parse it. They can only capture the other players pieces
     }
