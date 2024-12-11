@@ -618,7 +618,7 @@ function moveKing(
   const currentPosition = gameState[pieceId];
 
   if (currentPosition === undefined) {
-    throw new Error('Unknown position');
+    throw new Error("Unknown position");
   }
 
   const queenMoves = [
@@ -629,7 +629,7 @@ function moveKing(
   const adjacentPositions = [
     currentPosition - 8,
     currentPosition - 8 + 1,
-    currentPosition - 8 +- 1,
+    currentPosition - 8 + -1,
     currentPosition + 8,
     currentPosition + 8 + 1,
     currentPosition + 8 - 1,
@@ -638,7 +638,7 @@ function moveKing(
   ];
 
   // Filter all non-adjacent moves out of the queen path set
-  return queenMoves.filter(pos => adjacentPositions.includes(pos))
+  return queenMoves.filter((pos) => adjacentPositions.includes(pos));
 }
 
 // Get a color from a piece id
