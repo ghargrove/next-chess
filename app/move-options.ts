@@ -1,8 +1,9 @@
 import { PieceId } from "./components/GamePiece";
-import { isOnLeftBoundary, isOnRightBoundary } from "./boundary-checks";
+import { isOnBottomBoundary, isOnLeftBoundary, isOnRightBoundary, isOnTopBoundary } from "./boundary-checks";
 
 const colorRegEx = /^(blk|wh)-.*$/;
 const pawnRegex = /^(blk|wh)-p([1-8])$/;
+const rookRegex = /^(blk|wh)-r[1-2]$/;
 
 /**
  * Inverts the key/value pairs from the active pieces hash and converts to a Map
@@ -23,6 +24,10 @@ export function calculateGamePieceMoves(
 ): number[] {
   if (pawnRegex.test(pieceId)) {
     return movePawn(pieceId, gameState).sort();
+  }
+
+  if (rookRegex.test(pieceId)) {
+    return moveRook(pieceId, gameState).sort()
   }
 
   return [];
@@ -137,4 +142,49 @@ function movePawn(pieceId: PieceId, gameState: Partial<Record<PieceId, number>>)
   throw new Error("Invalid color provided");
 }
 
-function moveRook(currentPosition: number) {}
+function moveRook(pieceId: PieceId, gameState: Partial<Record<PieceId, number>>): number[] {
+  const positions: number[] = []
+  const currentPosition = gameState[pieceId];
+  const invertedPieces = invertAndMapPieceState(gameState)
+
+  if (currentPosition === undefined) {
+    throw new Error('Piece trying to be moved is not active')
+  }
+  
+  // Handle squares to the left
+  if (!isOnLeftBoundary(currentPosition)) {
+    let nextLeftPosition = currentPosition - 1
+
+    while (!isOnLeftBoundary(nextLeftPosition)) {
+      if (invertedPieces.has(nextLeftPosition)) {
+        break;
+      }
+  
+      positions.push(nextLeftPosition--)
+    }
+
+    // Once we're on the left boundary we're going to bail. Add the left boundary item here
+    positions.push(nextLeftPosition--)
+  }
+
+  // Handle squares to the right
+  if (!isOnRightBoundary(currentPosition)) {
+    let nextRightPosition = currentPosition + 1
+
+    while (!isOnRightBoundary(nextRightPosition)) {
+      if (invertedPieces.has(nextRightPosition)) {
+        break;
+      }
+  
+      positions.push(nextRightPosition++)
+    }
+
+    // Once we're on the left boundary we're going to bail. Add the left boundary item here
+    positions.push(nextRightPosition++)
+  }
+  
+  
+  
+
+  return positions
+}
