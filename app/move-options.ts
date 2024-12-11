@@ -1,5 +1,6 @@
 import { PieceId } from "./components/GamePiece";
 import { isOnBottomBoundary, isOnLeftBoundary, isOnRightBoundary, isOnTopBoundary } from "./boundary-checks";
+import next from "next";
 
 const colorRegEx = /^(blk|wh)-.*$/;
 const pawnRegex = /^(blk|wh)-p([1-8])$/;
@@ -182,7 +183,42 @@ function moveRook(pieceId: PieceId, gameState: Partial<Record<PieceId, number>>)
     // Once we're on the left boundary we're going to bail. Add the left boundary item here
     positions.push(nextRightPosition++)
   }
+
+  // Handle vertical up
+  if (!isOnTopBoundary(currentPosition)) {
+    let nextTopPosition = currentPosition - 8
+
+    while (!isOnTopBoundary(nextTopPosition)) {
+
+      if (invertedPieces.has(nextTopPosition)) {
+        break;
+      }
   
+      positions.push(nextTopPosition)
+      nextTopPosition -= 8
+    }
+
+    // Once we're on the left boundary we're going to bail. Add the left boundary item here
+    positions.push(nextTopPosition - 8)
+  }
+
+  // Handle vertican down
+  if (!isOnBottomBoundary(currentPosition)) {
+    let nextBottomPosition = currentPosition + 8
+
+    while (!isOnBottomBoundary(nextBottomPosition)) {
+
+      if (invertedPieces.has(nextBottomPosition)) {
+        break;
+      }
+  
+      positions.push(nextBottomPosition)
+      nextBottomPosition += 8
+    }
+
+    // Once we're on the left boundary we're going to bail. Add the left boundary item here
+    positions.push(nextBottomPosition + 8)
+  }
   
   
 

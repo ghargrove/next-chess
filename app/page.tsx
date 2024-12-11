@@ -67,7 +67,8 @@ export default function Home() {
     {
       activePieces: {
         ...initialState,
-        'wh-r2': 28
+        'wh-r2': 28,
+        'blk-r1': 34
       },
       capturedPieces: [],
       turn: "white",
