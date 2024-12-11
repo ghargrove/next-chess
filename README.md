@@ -1,7 +1,7 @@
 
 ## Chess <> React
 
-Wanted to play around with React a bit. So I built chess game ♟️.
+Wanted to play around with React a bit. So I built a chess game ♟️.
 
 To get started, download the depenedencies and run the development server:
 
