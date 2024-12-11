@@ -73,7 +73,6 @@ export const Gameboard: React.FC<GameboardProps> = (props) => {
     (pos) => (evt) => {
       // I'm type casting here because I know what I set
       const pieceId = evt.dataTransfer.getData("text/plain") as PieceId
-
       const legalMoves = calculateGamePieceMoves(pieceId, piecePositions)
       
       // If the piece was dropped on a legal space then update the game board
