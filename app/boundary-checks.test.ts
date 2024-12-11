@@ -1,6 +1,6 @@
 import { expect, it } from "@jest/globals";
 
-import { isOnLeftBoundary, isOnRightBoundary } from "./boundary-checks";
+import { isOnLeftBoundary, isOnRightBoundary, isOnTopBoundary } from "./boundary-checks";
 
 it("returns true if the position is along the left border", () => {
   [0, 8, 16, 24, 32, 40, 48, 56].forEach((v) => {
@@ -23,5 +23,17 @@ it("returns true if the position is along the right border", () => {
 it("returns false if the position is not along the right border", () => {
   [4, 24, 60, 100, -1, 36].forEach((v) => {
     expect(isOnRightBoundary(v)).toBe(false);
+  });
+});
+
+it("returns true if the position is along the top border", () => {
+  [0, 1, 2, 3, 4, 5, 6, 7].forEach((v) => {
+    expect(isOnTopBoundary(v)).toBe(true);
+  });
+});
+
+it("returns false if the position is not along the top border", () => {
+  [31, 24, 60, 100, -1, 36].forEach((v) => {
+    expect(isOnTopBoundary(v)).toBe(false);
   });
 });
