@@ -10,8 +10,8 @@ import { areKingsInCheck } from "./check-check";
 interface State {
   activePieces: Partial<typeof initialState>;
   capturedPieces: PieceId[];
-  inCheck: 'black' | 'white' | null
-  inCheckMate: boolean
+  inCheck: "black" | "white" | null;
+  inCheckMate: boolean;
   turn: "black" | "white";
 }
 
@@ -43,15 +43,15 @@ function reducer(state: State, action: Action): State {
       [pieceId]: position,
     };
 
-    // Given the next state of the board, 
-    const [kingColor, isCheckmate] = areKingsInCheck(nextActivePieces)
-    let inCheck: 'black' | 'white' | null = null 
-    if (kingColor === 'black') {
-      inCheck = 'black'
-    } else if (kingColor === 'white') {
-      inCheck = 'white'
+    // Given the next state of the board,
+    const [kingColor, isCheckmate] = areKingsInCheck(nextActivePieces);
+    let inCheck: "black" | "white" | null = null;
+    if (kingColor === "black") {
+      inCheck = "black";
+    } else if (kingColor === "white") {
+      inCheck = "white";
     }
-  
+
     return {
       ...state,
       activePieces: nextActivePieces,
@@ -77,24 +77,25 @@ function reducer(state: State, action: Action): State {
 }
 
 export default function Home() {
-  const [{ activePieces, capturedPieces, inCheck, inCheckMate, turn }, dispatch] = useReducer(
-    reducer,
-    {
-      activePieces: blitzkriegState,
-      capturedPieces: [],
-      inCheck: null,
-      inCheckMate: false, 
-      turn: "white",
-    }
-  );
+  const [
+    { activePieces, capturedPieces, inCheck, inCheckMate, turn },
+    dispatch,
+  ] = useReducer(reducer, {
+    activePieces: blitzkriegState,
+    capturedPieces: [],
+    inCheck: null,
+    inCheckMate: false,
+    turn: "white",
+  });
 
+  // If the `inCheckMate` state becomes true, the game is over. Show a native modal
   useEffect(() => {
     if (inCheckMate) {
-      window.alert(`Checkmate ${inCheck}!`)
-      
+      window.alert(`Checkmate ${inCheck}!`);
+
       dispatch({ type: "RESET_GAME" });
     }
-  }, [dispatch, inCheck, inCheckMate])
+  }, [dispatch, inCheck, inCheckMate]);
 
   // Reset the board when a user clicks this button
   const handleResetClick: React.MouseEventHandler<HTMLButtonElement> = (

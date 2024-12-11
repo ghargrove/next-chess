@@ -2,7 +2,10 @@
 
 import { useMemo, useState } from "react";
 import { GamePiece, PieceId } from "./GamePiece";
-import { calculateGamePieceMoves, invertAndMapPieceState } from "../move-options";
+import {
+  calculateGamePieceMoves,
+  invertAndMapPieceState,
+} from "../move-options";
 
 type SquareType = "black-square" | "white-square";
 
@@ -115,7 +118,7 @@ export const Gameboard: React.FC<GameboardProps> = (props) => {
           // if there is a piece at that point
           const boardPos = rowIdx * 8 + colIdx;
           const pieceId = pieceMap.get(boardPos);
-          
+
           return (
             <div
               key={rowIdx + "-" + colIdx}

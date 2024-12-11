@@ -25,7 +25,7 @@ export function areKingsInCheck(
     if (availableMoves.includes(blackKingPosition)) {
       return [
         "black",
-        calculateGamePieceMoves("blk-k", activePieces).length <= 1,
+        calculateGamePieceMoves("blk-k", activePieces).length === 0,
       ];
     }
 
