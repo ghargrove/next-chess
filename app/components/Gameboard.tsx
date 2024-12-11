@@ -2,7 +2,10 @@
 
 import { useMemo, useState } from "react";
 import { GamePiece, PieceId } from "./GamePiece";
-import { calculateGamePieceMoves, invertAndMapPieceState } from "../move-options";
+import {
+  calculateGamePieceMoves,
+  invertAndMapPieceState,
+} from "../move-options";
 
 type SquareType = "black-square" | "white-square";
 
@@ -89,18 +92,24 @@ export const Gameboard: React.FC<GameboardProps> = (props) => {
     (pos) => (evt) => {
       // I'm type casting here because I know what I set
       const pieceId = evt.dataTransfer.getData("text/plain") as PieceId;
-      const legalMoves = calculateGamePieceMoves(pieceId, piecePositions);
 
-      // Make sure the piece being move aligns w/ the current turn
-      const pieceBelongsToTurn =
-        (currentTurn === "black" && /^blk/.test(pieceId)) ||
-        (currentTurn === "white" && /^wh/.test(pieceId));
+      try {
+        const legalMoves = calculateGamePieceMoves(pieceId, piecePositions);
 
-      // If the piece was dropped on a legal space then update the game board
-      if (legalMoves.includes(pos) && pieceBelongsToTurn) {
-        const pieceCaptured = pieceMap.get(pos);
+        // Make sure the piece being move aligns w/ the current turn
+        const pieceBelongsToTurn =
+          (currentTurn === "black" && /^blk/.test(pieceId)) ||
+          (currentTurn === "white" && /^wh/.test(pieceId));
 
-        onPiecePositionChange(pieceId, pos, pieceCaptured);
+        // If the piece was dropped on a legal space then update the game board
+        if (legalMoves.includes(pos) && pieceBelongsToTurn) {
+          const pieceCaptured = pieceMap.get(pos);
+
+          onPiecePositionChange(pieceId, pos, pieceCaptured);
+        }
+      } catch (e) {
+        // Log any errors thrown while generating the move path
+        console.log("Whoops", e instanceof Error ? e.message : e);
       }
 
       // Clear the highlighted moves
