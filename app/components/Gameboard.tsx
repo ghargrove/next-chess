@@ -1,11 +1,10 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { initialState } from "../data";
 import { GamePiece, PieceId } from "./GamePiece";
+import { calculateGamePieceMoves } from "../move-options";
 
 type SquareType = "black-square" | "white-square";
-
 
 interface GameboardProps {
   /** Display position information */
@@ -72,12 +71,18 @@ export const Gameboard: React.FC<GameboardProps> = (props) => {
 
   const handleDrop: (pos: number) => React.DragEventHandler<HTMLDivElement> =
     (pos) => (evt) => {
-      const pieceId = evt.dataTransfer.getData("text/plain")
+      // I'm type casting here because I know what I set
+      const pieceId = evt.dataTransfer.getData("text/plain") as PieceId
 
-      onPiecePositionChange(currentGameState => ({
-        ...currentGameState,
-        [pieceId]: pos
-      }))
+      const legalMoves = calculateGamePieceMoves(pieceId, piecePositions)
+      
+      // If the piece was dropped on a legal space then update the game board
+      if (legalMoves.includes(pos)) {
+        onPiecePositionChange(currentGameState => ({
+          ...currentGameState,
+          [pieceId]: pos
+        }))
+      }      
     };
 
   return (
