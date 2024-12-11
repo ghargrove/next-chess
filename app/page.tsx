@@ -1,14 +1,17 @@
 "use client";
 
-import React, { useReducer, useState } from "react";
+import React, { useEffect, useReducer } from "react";
 import { Dashboard, Gameboard } from "./components";
 import { PieceId } from "./components/GamePiece";
-import { initialState } from "./data";
+import { blitzkriegState, initialState } from "./data";
+import { areKingsInCheck } from "./check-check";
 
 /** Represents game state */
 interface State {
   activePieces: Partial<typeof initialState>;
   capturedPieces: PieceId[];
+  inCheck: "black" | "white" | null;
+  inCheckMate: boolean;
   turn: "black" | "white";
 }
 
@@ -35,17 +38,29 @@ function reducer(state: State, action: Action): State {
       delete activePieceDup[pieceCaptured];
     }
 
+    const nextActivePieces = {
+      ...activePieceDup,
+      [pieceId]: position,
+    };
+
+    // Given the next state of the board,
+    const [kingColor, isCheckmate] = areKingsInCheck(nextActivePieces);
+    let inCheck: "black" | "white" | null = null;
+    if (kingColor === "black") {
+      inCheck = "black";
+    } else if (kingColor === "white") {
+      inCheck = "white";
+    }
+
     return {
       ...state,
-      activePieces: {
-        ...activePieceDup,
-        [pieceId]: position,
-      },
+      activePieces: nextActivePieces,
       capturedPieces: [
         ...state.capturedPieces,
         ...(pieceCaptured !== undefined ? [pieceCaptured] : []),
       ],
-      // Toggle the turn
+      inCheck,
+      inCheckMate: isCheckmate,
       turn: state.turn === "black" ? "white" : "black",
     };
   }
@@ -62,14 +77,25 @@ function reducer(state: State, action: Action): State {
 }
 
 export default function Home() {
-  const [{ activePieces, capturedPieces, turn }, dispatch] = useReducer(
-    reducer,
-    {
-      activePieces: initialState,
-      capturedPieces: [],
-      turn: "white",
+  const [
+    { activePieces, capturedPieces, inCheck, inCheckMate, turn },
+    dispatch,
+  ] = useReducer(reducer, {
+    activePieces: blitzkriegState,
+    capturedPieces: [],
+    inCheck: null,
+    inCheckMate: false,
+    turn: "white",
+  });
+
+  // If the `inCheckMate` state becomes true, the game is over. Show a native modal
+  useEffect(() => {
+    if (inCheckMate) {
+      window.alert(`Checkmate ${inCheck}!`);
+
+      dispatch({ type: "RESET_GAME" });
     }
-  );
+  }, [dispatch, inCheck, inCheckMate]);
 
   // Reset the board when a user clicks this button
   const handleResetClick: React.MouseEventHandler<HTMLButtonElement> = (
@@ -98,7 +124,6 @@ export default function Home() {
     <div className="layout">
       <div>
         <Gameboard
-          debug
           currentTurn={turn}
           piecePositions={activePieces}
           onPiecePositionChange={handlePiecePositionChange}
@@ -118,7 +143,7 @@ export default function Home() {
           </button>
         </div>
       </div>
-      <Dashboard capturedPieces={capturedPieces} />
+      <Dashboard capturedPieces={capturedPieces} inCheck={inCheck} />
     </div>
   );
 }

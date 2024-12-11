@@ -3,11 +3,12 @@ import { GamePiece } from "./GamePiece";
 
 interface DashboardProps {
   capturedPieces: PieceId[];
+  inCheck: 'black' | 'white' | null
 }
 
 /** Presents game information */
 export const Dashboard: React.FC<DashboardProps> = (props) => {
-  const { capturedPieces } = props;
+  const { capturedPieces, inCheck } = props;
 
   // Group out the captured pieces so they can be rendered together
   const [whitePieces, blackPieces] = capturedPieces.reduce<
@@ -33,6 +34,7 @@ export const Dashboard: React.FC<DashboardProps> = (props) => {
   return (
     <div className="dashboard-container">
       <h1 className="dashboard-title">Chess</h1>
+      
       <div className="dashboard-captures">
         <div className="white-captures">
           <h2>White</h2>
@@ -52,6 +54,12 @@ export const Dashboard: React.FC<DashboardProps> = (props) => {
           </div>
         </div>
       </div>
+
+      {
+        inCheck !== null && (
+          <div className="check-warning">{inCheck[0].toUpperCase() + inCheck.substring(1)} is in check!</div>
+        )
+      }
     </div>
   );
 };
