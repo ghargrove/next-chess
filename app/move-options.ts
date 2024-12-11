@@ -4,6 +4,18 @@ import { isOnLeftBoundary, isOnRightBoundary } from "./boundary-checks";
 const colorRegEx = /^(blk|wh)-.*$/;
 const pawnRegex = /^(blk|wh)-p([1-8])$/;
 
+/**
+ * Inverts the key/value pairs from the active pieces hash and converts to a Map
+ * to make it easy to check
+ */
+export function invertAndMapPieceState(activePieces: Partial<Record<PieceId, number>>): Map<number, PieceId> {
+  return new Map(
+    Array.from(Object.entries(activePieces) as [PieceId, number][]).map<
+      [number, PieceId]
+    >(([k, v]) => [v, k])
+  );
+}
+
 /** Calculate the spaces a piece can move to */
 export function calculateGamePieceMoves(
   pieceId: PieceId,
@@ -32,12 +44,7 @@ function movePawn(pieceId: PieceId, gameState: Partial<Record<PieceId, number>>)
   }
 
   const [_, color] = pawnMatch;
-
-  const invertedPieces = new Map(
-    Array.from(Object.entries(gameState) as [PieceId, number][]).map<
-      [number, PieceId]
-    >(([k, v]) => [v, k])
-  );
+  const invertedPieces = invertAndMapPieceState(gameState)
 
   if (color === "blk") {
     const onePositionForward = currentPosition + 8;
