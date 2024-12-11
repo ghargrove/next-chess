@@ -5,13 +5,7 @@ import { GamePiece, PieceId } from "./GamePiece";
 
 type SquareType = "black-square" | "white-square";
 
-interface GameboardProps {
-  clicks: Record<string, number>;
-  onItemClick: (v: [number, number]) => void;
-}
-
-export const Gameboard: React.FC<GameboardProps> = (props) => {
-  const { clicks, onItemClick } = props;
+export const Gameboard: React.FC = () => {
 
   // Initial game state
   // TODO: Move
@@ -92,7 +86,6 @@ export const Gameboard: React.FC<GameboardProps> = (props) => {
             <div
               key={rowIdx + "-" + colIdx}
               className={`square ${col}`}
-              onClick={() => onItemClick([rowIdx, colIdx])}
             >
               {pieceId !== undefined && <GamePiece pieceId={pieceId} />}
             </div>
