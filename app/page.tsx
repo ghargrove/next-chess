@@ -30,9 +30,9 @@ function reducer(state: State, action: Action): State {
     const { pieceCaptured, pieceId, position } = action;
 
     // Duplicate the active pieces state so that we can remove any capture pieces
-    const activePieceDup = { ...state.activePieces }
+    const activePieceDup = { ...state.activePieces };
     if (pieceCaptured !== undefined) {
-      delete activePieceDup[pieceCaptured]
+      delete activePieceDup[pieceCaptured];
     }
 
     return {
@@ -62,14 +62,17 @@ function reducer(state: State, action: Action): State {
 }
 
 export default function Home() {
-  const [{ activePieces, capturedPieces, turn }, dispatch] = useReducer(reducer, {
-    activePieces: {
-      ...initialState,
-      "blk-p5": 44,
-    },
-    capturedPieces: [],
-    turn: "white",
-  });
+  const [{ activePieces, capturedPieces, turn }, dispatch] = useReducer(
+    reducer,
+    {
+      activePieces: {
+        ...initialState,
+        "blk-p5": 44,
+      },
+      capturedPieces: [],
+      turn: "white",
+    }
+  );
 
   // Reset the board when a user clicks this button
   const handleResetClick: React.MouseEventHandler<HTMLButtonElement> = (
@@ -81,7 +84,11 @@ export default function Home() {
   };
 
   // Move the piece identifierd by `pieceId`
-  const handlePiecePositionChange = (pieceId: PieceId, position: number, pieceCaptured?: PieceId) => {
+  const handlePiecePositionChange = (
+    pieceId: PieceId,
+    position: number,
+    pieceCaptured?: PieceId
+  ) => {
     dispatch({
       pieceCaptured,
       pieceId,
@@ -89,9 +96,6 @@ export default function Home() {
       type: "UPDATE_PIECE_POSITION",
     });
   };
-
-  console.log(Object.keys(activePieces).length)
-  console.log(capturedPieces.length)
 
   return (
     <div className="layout">
@@ -117,7 +121,7 @@ export default function Home() {
           </button>
         </div>
       </div>
-      <Dashboard />
+      <Dashboard capturedPieces={capturedPieces} />
     </div>
   );
 }
