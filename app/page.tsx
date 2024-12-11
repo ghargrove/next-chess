@@ -69,6 +69,9 @@ function reducer(state: State, action: Action): State {
     return {
       ...state,
       activePieces: initialState,
+      capturedPieces: [],
+      inCheck: null,
+      inCheckMate: false,
       turn: "white",
     };
   }
