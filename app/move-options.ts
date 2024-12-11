@@ -11,6 +11,7 @@ const rookRegex = /^(blk|wh)-r[1-2]$/;
 const knightRegex = /^(blk|wh)-kn[1-2]$/;
 const bishopRegex = /^(blk|wh)-b[1-2]$/;
 const queenRegex = /^(blk|wh)-q$/;
+const kingRegex = /^(blk|wh)-k$/;
 
 /**
  * Inverts the key/value pairs from the active pieces hash and converts to a Map
@@ -50,8 +51,12 @@ export function calculateGamePieceMoves(
   if (queenRegex.test(pieceId)) {
     return [
       ...moveBishop(pieceId, gameState),
-      ...moveRook(pieceId, gameState)
+      ...moveRook(pieceId, gameState),
     ].sort();
+  }
+
+  if (kingRegex.test(pieceId)) {
+    return moveKing(pieceId, gameState).sort();
   }
 
   return [];
@@ -482,8 +487,10 @@ function moveKnight(
   return positions;
 }
 
-function moveBishop(pieceId: PieceId,
-gameState: Partial<Record<PieceId, number>>
+// Determine which positions a bishop
+function moveBishop(
+  pieceId: PieceId,
+  gameState: Partial<Record<PieceId, number>>
 ): number[] {
   const positions: number[] = [];
   const currentPosition = gameState[pieceId];
@@ -494,105 +501,144 @@ gameState: Partial<Record<PieceId, number>>
   }
 
   // Map the diagonal paths
-  let leftTopPosition = currentPosition
-  let rightTopPosition = currentPosition
-  let leftBottomPosition = currentPosition
-  let rightBottomPosition = currentPosition
+  let leftTopPosition = currentPosition;
+  let rightTopPosition = currentPosition;
+  let leftBottomPosition = currentPosition;
+  let rightBottomPosition = currentPosition;
 
   // top left
-  let didBreak = false
+  let didBreak = false;
   while (!didBreak) {
     if (isOnLeftBoundary(leftTopPosition) || isOnTopBoundary(leftTopPosition)) {
-      didBreak = true
-      break
+      didBreak = true;
+      break;
     }
 
-    leftTopPosition = leftTopPosition - (8 * 1) - 1
-    const pieceAtNextPosition = invertedPieces.get(leftTopPosition)
+    leftTopPosition = leftTopPosition - 8 * 1 - 1;
+    const pieceAtNextPosition = invertedPieces.get(leftTopPosition);
 
     if (pieceAtNextPosition !== undefined) {
       if (piecesBelongToSameTeam(pieceAtNextPosition, pieceId)) {
-        break
+        break;
       } else {
-        positions.push(leftTopPosition)
-        break
+        positions.push(leftTopPosition);
+        break;
       }
     }
-    
-    positions.push(leftTopPosition)
+
+    positions.push(leftTopPosition);
   }
 
   // top right
-  didBreak = false
+  didBreak = false;
   while (!didBreak) {
-    if (isOnRightBoundary(rightTopPosition) || isOnTopBoundary(rightTopPosition)) {
-      didBreak = true
-      break
+    if (
+      isOnRightBoundary(rightTopPosition) ||
+      isOnTopBoundary(rightTopPosition)
+    ) {
+      didBreak = true;
+      break;
     }
 
-    rightTopPosition = rightTopPosition - (8 * 1) + 1
-    const pieceAtNextPosition = invertedPieces.get(rightTopPosition)
+    rightTopPosition = rightTopPosition - 8 * 1 + 1;
+    const pieceAtNextPosition = invertedPieces.get(rightTopPosition);
 
     if (pieceAtNextPosition !== undefined) {
       if (piecesBelongToSameTeam(pieceAtNextPosition, pieceId)) {
-        break
+        break;
       } else {
-        positions.push(rightTopPosition)
-        break
+        positions.push(rightTopPosition);
+        break;
       }
     }
 
-    positions.push(rightTopPosition)
+    positions.push(rightTopPosition);
   }
 
   // bottom left
-  didBreak = false
+  didBreak = false;
   while (!didBreak) {
-    if (isOnLeftBoundary(leftBottomPosition) || isOnBottomBoundary(leftBottomPosition)) {
-      didBreak = true
-      break
+    if (
+      isOnLeftBoundary(leftBottomPosition) ||
+      isOnBottomBoundary(leftBottomPosition)
+    ) {
+      didBreak = true;
+      break;
     }
 
-    leftBottomPosition = leftBottomPosition + (8 * 1) - 1
-    const pieceAtNextPosition = invertedPieces.get(leftBottomPosition)
+    leftBottomPosition = leftBottomPosition + 8 * 1 - 1;
+    const pieceAtNextPosition = invertedPieces.get(leftBottomPosition);
 
     if (pieceAtNextPosition !== undefined) {
       if (piecesBelongToSameTeam(pieceAtNextPosition, pieceId)) {
-        break
+        break;
       } else {
-        positions.push(leftBottomPosition)
-        break
+        positions.push(leftBottomPosition);
+        break;
       }
     }
 
-    positions.push(leftBottomPosition)
+    positions.push(leftBottomPosition);
   }
 
   // bottom right
-  didBreak = false
+  didBreak = false;
   while (!didBreak) {
-    if (isOnRightBoundary(rightBottomPosition) || isOnBottomBoundary(rightBottomPosition)) {
-      didBreak = true
-      break
+    if (
+      isOnRightBoundary(rightBottomPosition) ||
+      isOnBottomBoundary(rightBottomPosition)
+    ) {
+      didBreak = true;
+      break;
     }
 
-    rightBottomPosition = rightBottomPosition + (8 * 1) + 1
-    const pieceAtNextPosition = invertedPieces.get(rightBottomPosition)
+    rightBottomPosition = rightBottomPosition + 8 * 1 + 1;
+    const pieceAtNextPosition = invertedPieces.get(rightBottomPosition);
 
     if (pieceAtNextPosition !== undefined) {
       if (piecesBelongToSameTeam(pieceAtNextPosition, pieceId)) {
-        break
+        break;
       } else {
-        positions.push(rightBottomPosition)
-        break
+        positions.push(rightBottomPosition);
+        break;
       }
     }
-   
-    positions.push(rightBottomPosition)
+
+    positions.push(rightBottomPosition);
   }
 
+  return positions;
+}
 
-  return positions
+// Determine which positions a king can move to
+function moveKing(
+  pieceId: PieceId,
+  gameState: Partial<Record<PieceId, number>>
+): number[] {
+  const currentPosition = gameState[pieceId];
+
+  if (currentPosition === undefined) {
+    throw new Error("Unknown position");
+  }
+
+  const queenMoves = [
+    ...moveBishop(pieceId, gameState),
+    ...moveRook(pieceId, gameState),
+  ];
+
+  const adjacentPositions = [
+    currentPosition - 8,
+    currentPosition - 8 + 1,
+    currentPosition - 8 + -1,
+    currentPosition + 8,
+    currentPosition + 8 + 1,
+    currentPosition + 8 - 1,
+    currentPosition + 1,
+    currentPosition - 1,
+  ];
+
+  // Filter all non-adjacent moves out of the queen path set
+  return queenMoves.filter((pos) => adjacentPositions.includes(pos));
 }
 
 // Get a color from a piece id
