@@ -36,7 +36,10 @@ function movePawn(pieceId: PieceId, gameState: Record<PieceId, number>) {
 
   if (color === "blk") {
     const onePositionForward = currentPosition + 8;
-    const positions = [onePositionForward];
+    
+    // If there is a piece in the position directly in front of the pawn, then
+    // do not allow them to move one position forward
+    const positions = invertedPieces.has(onePositionForward) ? [] : [onePositionForward];
 
     // Don't try to capture to the left if we're on the left boundary
     if (!isOnLeftBoundary(currentPosition)) {
@@ -77,7 +80,10 @@ function movePawn(pieceId: PieceId, gameState: Record<PieceId, number>) {
 
   if (color === "wh") {
     const onePositionForward = currentPosition - 8;
-    const positions = [currentPosition - 8];
+
+    // If there is a piece in the position directly in front of the pawn, then
+    // do not allow them to move one position forward
+    const positions = invertedPieces.has(onePositionForward) ? [] : [currentPosition - 8];
 
     if (!isOnLeftBoundary(currentPosition)) {
       const pieceToLeft = invertedPieces.get(onePositionForward - 1);
