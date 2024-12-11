@@ -7,13 +7,15 @@ import { initialState } from "./data";
 
 /** Represents game state */
 interface State {
-  gameState: typeof initialState;
+  activePieces: Partial<typeof initialState>;
+  capturedPieces: PieceId[];
   turn: "black" | "white";
 }
 
 /** Represents actions performed during the game */
 type Action =
   | {
+      pieceCaptured?: PieceId;
       pieceId: PieceId;
       position: number;
       type: "UPDATE_PIECE_POSITION";
@@ -24,23 +26,34 @@ type Action =
 
 // State reducer
 function reducer(state: State, action: Action): State {
-  if (action.type === 'UPDATE_PIECE_POSITION') {
-    const { pieceId, position } = action
+  if (action.type === "UPDATE_PIECE_POSITION") {
+    const { pieceCaptured, pieceId, position } = action;
+
+    // Duplicate the active pieces state so that we can remove any capture pieces
+    const activePieceDup = { ...state.activePieces };
+    if (pieceCaptured !== undefined) {
+      delete activePieceDup[pieceCaptured];
+    }
+
     return {
       ...state,
-      gameState: {
-        ...state.gameState,
-        [pieceId]: position
+      activePieces: {
+        ...activePieceDup,
+        [pieceId]: position,
       },
+      capturedPieces: [
+        ...state.capturedPieces,
+        ...(pieceCaptured !== undefined ? [pieceCaptured] : []),
+      ],
       // Toggle the turn
-      turn: state.turn === 'black' ? 'white' : 'black'
-    }
+      turn: state.turn === "black" ? "white" : "black",
+    };
   }
 
   if (action.type === "RESET_GAME") {
     return {
       ...state,
-      gameState: initialState,
+      activePieces: initialState,
       turn: "white",
     };
   }
@@ -49,10 +62,17 @@ function reducer(state: State, action: Action): State {
 }
 
 export default function Home() {
-  const [{ gameState, turn }, dispatch] = useReducer(reducer, {
-    gameState: initialState,
-    turn: "white",
-  });
+  const [{ activePieces, capturedPieces, turn }, dispatch] = useReducer(
+    reducer,
+    {
+      activePieces: {
+        ...initialState,
+        "blk-p5": 44,
+      },
+      capturedPieces: [],
+      turn: "white",
+    }
+  );
 
   // Reset the board when a user clicks this button
   const handleResetClick: React.MouseEventHandler<HTMLButtonElement> = (
@@ -64,8 +84,13 @@ export default function Home() {
   };
 
   // Move the piece identifierd by `pieceId`
-  const handlePiecePositionChange = (pieceId: PieceId, position: number) => {
+  const handlePiecePositionChange = (
+    pieceId: PieceId,
+    position: number,
+    pieceCaptured?: PieceId
+  ) => {
     dispatch({
+      pieceCaptured,
       pieceId,
       position,
       type: "UPDATE_PIECE_POSITION",
@@ -78,7 +103,7 @@ export default function Home() {
         <Gameboard
           debug
           currentTurn={turn}
-          piecePositions={gameState}
+          piecePositions={activePieces}
           onPiecePositionChange={handlePiecePositionChange}
         />
         <div className="status-container">
@@ -96,7 +121,7 @@ export default function Home() {
           </button>
         </div>
       </div>
-      <Dashboard />
+      <Dashboard capturedPieces={capturedPieces} />
     </div>
   );
 }
