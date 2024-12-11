@@ -8,6 +8,7 @@ import {
 const colorRegEx = /^(blk|wh)-.*$/;
 const pawnRegex = /^(blk|wh)-p([1-8])$/;
 const rookRegex = /^(blk|wh)-r[1-2]$/;
+const knightRegex = /^(blk|wh)-kn[1-2]$/;
 
 /**
  * Inverts the key/value pairs from the active pieces hash and converts to a Map
@@ -36,10 +37,14 @@ export function calculateGamePieceMoves(
     return moveRook(pieceId, gameState).sort();
   }
 
+  if (knightRegex.test(pieceId)) {
+    return moveKnight(pieceId, gameState).sort();
+  }
+
   return [];
 }
 
-/** Determines which postitions a pawn can move to */
+// Determines which postitions a pawn can move to
 function movePawn(
   pieceId: PieceId,
   gameState: Partial<Record<PieceId, number>>
@@ -152,6 +157,7 @@ function movePawn(
   throw new Error("Invalid color provided");
 }
 
+// Determine which positions a knight can move to
 function moveRook(
   pieceId: PieceId,
   gameState: Partial<Record<PieceId, number>>
@@ -166,7 +172,7 @@ function moveRook(
 
   // Handle squares to the left
   if (!isOnLeftBoundary(currentPosition)) {
-    let didBreakOnPiece = false
+    let didBreakOnPiece = false;
     let nextLeftPosition = currentPosition - 1;
 
     while (!isOnLeftBoundary(nextLeftPosition)) {
@@ -176,7 +182,7 @@ function moveRook(
           positions.push(nextLeftPosition);
         }
 
-        didBreakOnPiece = true
+        didBreakOnPiece = true;
         break;
       }
 
@@ -201,7 +207,7 @@ function moveRook(
           positions.push(nextRightPosition);
         }
 
-        didBreakOnPiece = true
+        didBreakOnPiece = true;
         break;
       }
 
@@ -243,7 +249,7 @@ function moveRook(
 
   // Handle vertican down
   if (!isOnBottomBoundary(currentPosition)) {
-    let didBreakOnPiece = false
+    let didBreakOnPiece = false;
     let nextBottomPosition = currentPosition + 8;
 
     while (!isOnBottomBoundary(nextBottomPosition)) {
@@ -252,8 +258,8 @@ function moveRook(
         if (!piecesBelongToSameTeam(pieceId, pieceAtNextPosition)) {
           positions.push(nextBottomPosition);
         }
-        
-        didBreakOnPiece = true
+
+        didBreakOnPiece = true;
 
         break;
       }
@@ -265,6 +271,125 @@ function moveRook(
     if (!didBreakOnPiece) {
       positions.push(nextBottomPosition + 8);
     }
+  }
+
+  return positions;
+}
+
+function moveKnight(
+  pieceId: PieceId,
+  gameState: Partial<Record<PieceId, number>>
+): number[] {
+  const positions: number[] = [];
+  const currentPosition = gameState[pieceId];
+  const invertedPieces = invertAndMapPieceState(gameState);
+
+  if (currentPosition === undefined) {
+    throw new Error("Piece trying to be moved is not active");
+  }
+
+  // Up one - Two left
+  const upOneL = [
+    currentPosition - 8 * 1,
+    currentPosition - 8 * 1 + 1,
+    currentPosition - (8 * 1 + 2),
+  ];
+  const upOneLBool = upOneL.map(
+    (_i) => isOnTopBoundary(_i) || isOnLeftBoundary(_i)
+  );
+  if (upOneLBool.indexOf(true) <= -1 || upOneLBool.indexOf(true) >= 2) {
+    positions.push(upOneL[2]);
+  }
+
+  // Up one - Two right
+  const upOneR = [
+    currentPosition - 8 * 1,
+    currentPosition - 8 * 1 - 1,
+    currentPosition - (8 * 1 - 2),
+  ];
+  const upOneRBool = upOneL.map(
+    (_i) => isOnTopBoundary(_i) || isOnRightBoundary(_i)
+  );
+  if (upOneRBool.indexOf(true) <= -1 || upOneRBool.indexOf(true) >= 2) {
+    positions.push(upOneR[2]);
+  }
+
+  // Down one - Two left
+  const downOneL = [
+    currentPosition + 8 * 1,
+    currentPosition + 8 * 1 - 1,
+    currentPosition + (8 * 1 - 2),
+  ];
+  const downOneLBool = downOneL.map(
+    (_i) => isOnTopBoundary(_i) || isOnLeftBoundary(_i)
+  );
+  if (downOneLBool.indexOf(true) <= -1 || downOneLBool.indexOf(true) >= 2) {
+    positions.push(downOneL[2]);
+  }
+
+  // Down onw - Two right
+  const downOneR = [
+    currentPosition + 8 * 1,
+    currentPosition + 8 * 1 + 1,
+    currentPosition + (8 * 1 + 2),
+  ];
+  const downOneRBool = downOneL.map(
+    (_i) => isOnTopBoundary(_i) || isOnRightBoundary(_i)
+  );
+  if (downOneRBool.indexOf(true) <= -1 || downOneRBool.indexOf(true) >= 2) {
+    positions.push(downOneR[2]);
+  }
+
+  // Up two - One left
+  const upTwoL = [
+    currentPosition - 8 * 1,
+    currentPosition - 8 * 2,
+    currentPosition - (8 * 2 + 1),
+  ];
+  const upTwoLBool = upTwoL.map(
+    (_i) => isOnTopBoundary(_i) || isOnLeftBoundary(_i)
+  );
+  if (upTwoLBool.indexOf(true) <= -1 || upTwoLBool.indexOf(true) >= 2) {
+    positions.push(upTwoL[2]);
+  }
+
+  // Up two - One Right
+  const upTwoR = [
+    currentPosition - 8 * 1,
+    currentPosition - 8 * 2,
+    currentPosition - (8 * 2 - 1),
+  ];
+  const upTwoRBool = upTwoR.map(
+    (_i) => isOnTopBoundary(_i) || isOnRightBoundary(_i)
+  );
+  if (upTwoRBool.indexOf(true) <= -1 || upTwoRBool.indexOf(true) >= 2) {
+    positions.push(upTwoR[2]);
+  }
+
+  // Down two - One left
+  const downTwoL = [
+    currentPosition + 8 * 1,
+    currentPosition + 8 * 2,
+    currentPosition + (8 * 2 - 1),
+  ];
+  const downTwoLBool = upTwoL.map(
+    (_i) => isOnBottomBoundary(_i) || isOnLeftBoundary(_i)
+  );
+  if (downTwoLBool.indexOf(true) <= -1 || downTwoLBool.indexOf(true) >= 2) {
+    positions.push(downTwoL[2]);
+  }
+
+  // Down two - One right
+  const downTwoR = [
+    currentPosition + 8 * 1,
+    currentPosition + 8 * 2,
+    currentPosition + (8 * 2 + 1),
+  ];
+  const downTwoRBool = upTwoL.map(
+    (_i) => isOnBottomBoundary(_i) || isOnRightBoundary(_i)
+  );
+  if (downTwoRBool.indexOf(true) <= -1 || downTwoRBool.indexOf(true) >= 2) {
+    positions.push(downTwoR[2]);
   }
 
   return positions;
