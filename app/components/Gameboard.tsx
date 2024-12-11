@@ -12,7 +12,7 @@ interface GameboardProps {
   /** Display position information */
   debug?: boolean;
   /** Describes where on the board the pieces are positioned */
-  piecePositions: Record<PieceId, number>;
+  piecePositions: Partial<Record<PieceId, number>>;
   /** Update the piece to the `position` */
   onPiecePositionChange: (pieceId: PieceId, position: number) => void;
 }

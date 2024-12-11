@@ -7,7 +7,7 @@ import { initialState } from "./data";
 
 /** Represents game state */
 interface State {
-  gameState: typeof initialState;
+  activePieces: Partial<typeof initialState>;
   turn: "black" | "white";
 }
 
@@ -28,8 +28,8 @@ function reducer(state: State, action: Action): State {
     const { pieceId, position } = action
     return {
       ...state,
-      gameState: {
-        ...state.gameState,
+      activePieces: {
+        ...state.activePieces,
         [pieceId]: position
       },
       // Toggle the turn
@@ -40,7 +40,7 @@ function reducer(state: State, action: Action): State {
   if (action.type === "RESET_GAME") {
     return {
       ...state,
-      gameState: initialState,
+      activePieces: initialState,
       turn: "white",
     };
   }
@@ -49,8 +49,11 @@ function reducer(state: State, action: Action): State {
 }
 
 export default function Home() {
-  const [{ gameState, turn }, dispatch] = useReducer(reducer, {
-    gameState: initialState,
+  const [{ activePieces, turn }, dispatch] = useReducer(reducer, {
+    activePieces: {
+      ...initialState,
+      'blk-p5': 44
+    },
     turn: "white",
   });
 
@@ -78,7 +81,7 @@ export default function Home() {
         <Gameboard
           debug
           currentTurn={turn}
-          piecePositions={gameState}
+          piecePositions={activePieces}
           onPiecePositionChange={handlePiecePositionChange}
         />
         <div className="status-container">

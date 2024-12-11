@@ -7,7 +7,7 @@ const pawnRegex = /^(blk|wh)-p([1-8])$/;
 /** Calculate the spaces a piece can move to */
 export function calculateGamePieceMoves(
   pieceId: PieceId,
-  gameState: Record<PieceId, number>
+  gameState: Partial<Record<PieceId, number>>
 ): number[] {
   if (pawnRegex.test(pieceId)) {
     return movePawn(pieceId, gameState).sort();
@@ -17,8 +17,13 @@ export function calculateGamePieceMoves(
 }
 
 /** Determines which postitions a pawn can move to */
-function movePawn(pieceId: PieceId, gameState: Record<PieceId, number>) {
+function movePawn(pieceId: PieceId, gameState: Partial<Record<PieceId, number>>): number[] {
   const currentPosition = gameState[pieceId];
+
+  if (currentPosition === undefined) {
+    throw new Error('Piece trying to be moved is not active')
+  }
+
   const pawnMatch = pawnRegex.exec(pieceId);
 
   // This should not happen. Make sure we handle this
