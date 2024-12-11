@@ -514,7 +514,7 @@ gameState: Partial<Record<PieceId, number>>
     positions.push(leftTopPosition)
   }
 
-  // // top right
+  // top right
   didBreak = false
   while (!didBreak) {
     if (isOnRightBoundary(rightTopPosition) || isOnTopBoundary(rightTopPosition)) {
