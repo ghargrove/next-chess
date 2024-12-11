@@ -43,7 +43,7 @@ function reducer(state: State, action: Action): State {
       [pieceId]: position,
     };
 
-    // Given the next state of the board,
+    // Given the next state of the board, determine if the kings are in check
     const [kingColor, isCheckmate] = areKingsInCheck(nextActivePieces);
     let inCheck: "black" | "white" | null = null;
     if (kingColor === "black") {
@@ -127,6 +127,7 @@ export default function Home() {
     <div className="layout">
       <div>
         <Gameboard
+        debug
           currentTurn={turn}
           piecePositions={activePieces}
           onPiecePositionChange={handlePiecePositionChange}
