@@ -67,7 +67,9 @@ export default function Home() {
     {
       activePieces: {
         ...initialState,
-        'wh-kn2': 28
+        'wh-kn2': 28,
+        'wh-p6': 22,
+        'blk-p6': undefined
       },
       capturedPieces: [],
       turn: "white",

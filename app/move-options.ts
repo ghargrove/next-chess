@@ -276,6 +276,7 @@ function moveRook(
   return positions;
 }
 
+// Determine which positions a knight can move to
 function moveKnight(
   pieceId: PieceId,
   gameState: Partial<Record<PieceId, number>>
@@ -291,27 +292,46 @@ function moveKnight(
   // Up one - Two left
   const upOneL = [
     currentPosition - 8 * 1,
-    currentPosition - 8 * 1 + 1,
-    currentPosition - (8 * 1 + 2),
+    currentPosition - 8 * 1 - 1,
+    currentPosition - 8 * 1 - 2,
   ];
   const upOneLBool = upOneL.map(
     (_i) => isOnTopBoundary(_i) || isOnLeftBoundary(_i)
   );
+
   if (upOneLBool.indexOf(true) <= -1 || upOneLBool.indexOf(true) >= 2) {
-    positions.push(upOneL[2]);
+    const dest = upOneL[2];
+    const pieceAtNextPosition = invertedPieces.get(dest);
+
+    if (
+      pieceAtNextPosition === undefined ||
+      (pieceAtNextPosition !== undefined &&
+        !piecesBelongToSameTeam(pieceId, pieceAtNextPosition))
+    ) {
+      positions.push(dest);
+    }
   }
 
   // Up one - Two right
   const upOneR = [
     currentPosition - 8 * 1,
-    currentPosition - 8 * 1 - 1,
-    currentPosition - (8 * 1 - 2),
+    currentPosition - 8 * 1 + 1,
+    currentPosition - 8 * 1 + 2,
   ];
   const upOneRBool = upOneL.map(
     (_i) => isOnTopBoundary(_i) || isOnRightBoundary(_i)
   );
   if (upOneRBool.indexOf(true) <= -1 || upOneRBool.indexOf(true) >= 2) {
-    positions.push(upOneR[2]);
+    const dest = upOneR[2];
+    const pieceAtNextPosition = invertedPieces.get(dest);
+
+    if (
+      pieceAtNextPosition === undefined ||
+      (pieceAtNextPosition !== undefined &&
+        !piecesBelongToSameTeam(pieceId, pieceAtNextPosition))
+    ) {
+      positions.push(dest);
+    }
   }
 
   // Down one - Two left
@@ -324,10 +344,19 @@ function moveKnight(
     (_i) => isOnTopBoundary(_i) || isOnLeftBoundary(_i)
   );
   if (downOneLBool.indexOf(true) <= -1 || downOneLBool.indexOf(true) >= 2) {
-    positions.push(downOneL[2]);
+    const dest = downOneL[2];
+    const pieceAtNextPosition = invertedPieces.get(dest);
+
+    if (
+      pieceAtNextPosition === undefined ||
+      (pieceAtNextPosition !== undefined &&
+        !piecesBelongToSameTeam(pieceId, pieceAtNextPosition))
+    ) {
+      positions.push(dest);
+    }
   }
 
-  // Down onw - Two right
+  // Down one - Two right
   const downOneR = [
     currentPosition + 8 * 1,
     currentPosition + 8 * 1 + 1,
@@ -337,7 +366,16 @@ function moveKnight(
     (_i) => isOnTopBoundary(_i) || isOnRightBoundary(_i)
   );
   if (downOneRBool.indexOf(true) <= -1 || downOneRBool.indexOf(true) >= 2) {
-    positions.push(downOneR[2]);
+    const dest = downOneR[2];
+    const pieceAtNextPosition = invertedPieces.get(dest);
+
+    if (
+      pieceAtNextPosition === undefined ||
+      (pieceAtNextPosition !== undefined &&
+        !piecesBelongToSameTeam(pieceId, pieceAtNextPosition))
+    ) {
+      positions.push(dest);
+    }
   }
 
   // Up two - One left
@@ -350,7 +388,16 @@ function moveKnight(
     (_i) => isOnTopBoundary(_i) || isOnLeftBoundary(_i)
   );
   if (upTwoLBool.indexOf(true) <= -1 || upTwoLBool.indexOf(true) >= 2) {
-    positions.push(upTwoL[2]);
+    const dest = upTwoL[2];
+    const pieceAtNextPosition = invertedPieces.get(dest);
+
+    if (
+      pieceAtNextPosition === undefined ||
+      (pieceAtNextPosition !== undefined &&
+        !piecesBelongToSameTeam(pieceId, pieceAtNextPosition))
+    ) {
+      positions.push(dest);
+    }
   }
 
   // Up two - One Right
@@ -363,7 +410,16 @@ function moveKnight(
     (_i) => isOnTopBoundary(_i) || isOnRightBoundary(_i)
   );
   if (upTwoRBool.indexOf(true) <= -1 || upTwoRBool.indexOf(true) >= 2) {
-    positions.push(upTwoR[2]);
+    const dest = upTwoR[2];
+    const pieceAtNextPosition = invertedPieces.get(dest);
+
+    if (
+      pieceAtNextPosition === undefined ||
+      (pieceAtNextPosition !== undefined &&
+        !piecesBelongToSameTeam(pieceId, pieceAtNextPosition))
+    ) {
+      positions.push(dest);
+    }
   }
 
   // Down two - One left
@@ -376,7 +432,16 @@ function moveKnight(
     (_i) => isOnBottomBoundary(_i) || isOnLeftBoundary(_i)
   );
   if (downTwoLBool.indexOf(true) <= -1 || downTwoLBool.indexOf(true) >= 2) {
-    positions.push(downTwoL[2]);
+    const dest = downTwoL[2];
+    const pieceAtNextPosition = invertedPieces.get(dest);
+
+    if (
+      pieceAtNextPosition === undefined ||
+      (pieceAtNextPosition !== undefined &&
+        !piecesBelongToSameTeam(pieceId, pieceAtNextPosition))
+    ) {
+      positions.push(dest);
+    }
   }
 
   // Down two - One right
@@ -389,7 +454,16 @@ function moveKnight(
     (_i) => isOnBottomBoundary(_i) || isOnRightBoundary(_i)
   );
   if (downTwoRBool.indexOf(true) <= -1 || downTwoRBool.indexOf(true) >= 2) {
-    positions.push(downTwoR[2]);
+    const dest = downTwoR[2];
+    const pieceAtNextPosition = invertedPieces.get(dest);
+
+    if (
+      pieceAtNextPosition === undefined ||
+      (pieceAtNextPosition !== undefined &&
+        !piecesBelongToSameTeam(pieceId, pieceAtNextPosition))
+    ) {
+      positions.push(dest);
+    }
   }
 
   return positions;
