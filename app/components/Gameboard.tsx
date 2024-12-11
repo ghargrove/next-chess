@@ -14,7 +14,11 @@ interface GameboardProps {
   /** Describes where on the board the pieces are positioned */
   piecePositions: Partial<Record<PieceId, number>>;
   /** Update the piece to the `position` */
-  onPiecePositionChange: (pieceId: PieceId, position: number, captures?: PieceId) => void;
+  onPiecePositionChange: (
+    pieceId: PieceId,
+    position: number,
+    captures?: PieceId
+  ) => void;
 }
 
 /** Presents a gameboard */
@@ -25,6 +29,9 @@ export const Gameboard: React.FC<GameboardProps> = (props) => {
     piecePositions,
     onPiecePositionChange,
   } = props;
+
+  // Tracks which cells are legal moves during a drag operation
+  const [legalMoves, setLegalMoves] = useState<number[]>([]);
 
   const invertedPieces = Array.from(
     Object.entries(piecePositions) as [PieceId, number][]
@@ -56,24 +63,32 @@ export const Gameboard: React.FC<GameboardProps> = (props) => {
   }, []);
 
   const handleDrag: React.DragEventHandler<HTMLDivElement> = (evt) => {
-    evt.dataTransfer.dropEffect = "move";
-
     // Add the piece id to the event
     const { pieceId } = evt.currentTarget.dataset;
     if (pieceId !== undefined) {
+      const pieceBelongsToTurn =
+        (currentTurn === "black" && /^blk/.test(pieceId)) ||
+        (currentTurn === "white" && /^wh/.test(pieceId));
+
+      // Do nothing if the piece doesn't belong to the current turn
+      if (!pieceBelongsToTurn) {
+        return;
+      }
+
+      evt.dataTransfer.dropEffect = "move";
       evt.dataTransfer.setData("text/plain", pieceId);
+
+      setLegalMoves(
+        calculateGamePieceMoves(pieceId as PieceId, piecePositions)
+      );
     }
   };
 
   const handleDragOver: (
     pos: number
   ) => React.DragEventHandler<HTMLDivElement> = (pos) => (evt) => {
-    // console.log("drag over -->", pos);
-
     evt.preventDefault();
   };
-
-  // First pass we should just move items. Who cares about rules
 
   const handleDrop: (pos: number) => React.DragEventHandler<HTMLDivElement> =
     (pos) => (evt) => {
@@ -88,10 +103,13 @@ export const Gameboard: React.FC<GameboardProps> = (props) => {
 
       // If the piece was dropped on a legal space then update the game board
       if (legalMoves.includes(pos) && pieceBelongsToTurn) {
-        const pieceCaptured = pieceMap.get(pos)
-        
+        const pieceCaptured = pieceMap.get(pos);
+
         onPiecePositionChange(pieceId, pos, pieceCaptured);
       }
+
+      // Clear the highlighted moves
+      setLegalMoves([]);
     };
 
   return (
@@ -106,7 +124,9 @@ export const Gameboard: React.FC<GameboardProps> = (props) => {
           return (
             <div
               key={rowIdx + "-" + colIdx}
-              className={`square ${col}`}
+              className={`square ${col} ${
+                legalMoves.includes(boardPos) ? "highlight-square" : ""
+              }`}
               onDragOver={handleDragOver(boardPos)}
               onDrop={handleDrop(boardPos)}
             >
