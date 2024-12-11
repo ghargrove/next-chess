@@ -7,19 +7,25 @@ import { calculateGamePieceMoves } from "../move-options";
 type SquareType = "black-square" | "white-square";
 
 interface GameboardProps {
+  /** Determines if it's the black or white players turn  */
+  currentTurn: "black" | "white";
   /** Display position information */
-  debug?: boolean
+  debug?: boolean;
   /** Describes where on the board the pieces are positioned */
-  piecePositions: Record<PieceId, number>
-  /** Update the piece position */
-  onPiecePositionChange: React.Dispatch<React.SetStateAction<Record<PieceId, number>>>
+  piecePositions: Record<PieceId, number>;
+  /** Update the piece to the `position` */
+  onPiecePositionChange: (pieceId: PieceId, position: number) => void;
 }
 
 /** Presents a gameboard */
 export const Gameboard: React.FC<GameboardProps> = (props) => {
-  const { debug = false, piecePositions, onPiecePositionChange } = props
-  
-  
+  const {
+    currentTurn,
+    debug = false,
+    piecePositions,
+    onPiecePositionChange,
+  } = props;
+
   const invertedPieces = Array.from(
     Object.entries(piecePositions) as [PieceId, number][]
   ).map<[number, PieceId]>(([k, v]) => [v, k]);
@@ -62,7 +68,7 @@ export const Gameboard: React.FC<GameboardProps> = (props) => {
   const handleDragOver: (
     pos: number
   ) => React.DragEventHandler<HTMLDivElement> = (pos) => (evt) => {
-    console.log("drag over -->", pos);
+    // console.log("drag over -->", pos);
 
     evt.preventDefault();
   };
@@ -72,16 +78,18 @@ export const Gameboard: React.FC<GameboardProps> = (props) => {
   const handleDrop: (pos: number) => React.DragEventHandler<HTMLDivElement> =
     (pos) => (evt) => {
       // I'm type casting here because I know what I set
-      const pieceId = evt.dataTransfer.getData("text/plain") as PieceId
-      const legalMoves = calculateGamePieceMoves(pieceId, piecePositions)
-      
+      const pieceId = evt.dataTransfer.getData("text/plain") as PieceId;
+      const legalMoves = calculateGamePieceMoves(pieceId, piecePositions);
+
+      // Make sure the piece being move aligns w/ the current turn
+      const pieceBelongsToTurn =
+        (currentTurn === "black" && /^blk/.test(pieceId)) ||
+        (currentTurn === "white" && /^wh/.test(pieceId));
+
       // If the piece was dropped on a legal space then update the game board
-      if (legalMoves.includes(pos)) {
-        onPiecePositionChange(currentGameState => ({
-          ...currentGameState,
-          [pieceId]: pos
-        }))
-      }      
+      if (legalMoves.includes(pos) && pieceBelongsToTurn) {
+        onPiecePositionChange(pieceId, pos);
+      }
     };
 
   return (
