@@ -54,6 +54,7 @@ export default function Home() {
     turn: "white",
   });
 
+  // Reset the board when a user clicks this button
   const handleResetClick: React.MouseEventHandler<HTMLButtonElement> = (
     evt
   ) => {
@@ -62,6 +63,7 @@ export default function Home() {
     dispatch({ type: "RESET_GAME" });
   };
 
+  // Move the piece identifierd by `pieceId`
   const handlePiecePositionChange = (pieceId: PieceId, position: number) => {
     dispatch({
       pieceId,
@@ -75,6 +77,7 @@ export default function Home() {
       <div>
         <Gameboard
           debug
+          currentTurn={turn}
           piecePositions={gameState}
           onPiecePositionChange={handlePiecePositionChange}
         />
