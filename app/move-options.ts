@@ -9,6 +9,7 @@ const colorRegEx = /^(blk|wh)-.*$/;
 const pawnRegex = /^(blk|wh)-p([1-8])$/;
 const rookRegex = /^(blk|wh)-r[1-2]$/;
 const knightRegex = /^(blk|wh)-kn[1-2]$/;
+const bishopRegex = /^(blk|wh)-b[1-2]$/;
 
 /**
  * Inverts the key/value pairs from the active pieces hash and converts to a Map
@@ -39,6 +40,10 @@ export function calculateGamePieceMoves(
 
   if (knightRegex.test(pieceId)) {
     return moveKnight(pieceId, gameState).sort();
+  }
+
+  if (bishopRegex.test(pieceId)) {
+    return moveBishop(pieceId, gameState).sort();
   }
 
   return [];
@@ -467,6 +472,119 @@ function moveKnight(
   }
 
   return positions;
+}
+
+function moveBishop(pieceId: PieceId,
+gameState: Partial<Record<PieceId, number>>
+): number[] {
+  const positions: number[] = [];
+  const currentPosition = gameState[pieceId];
+  const invertedPieces = invertAndMapPieceState(gameState);
+
+  if (currentPosition === undefined) {
+    throw new Error("Piece trying to be moved is not active");
+  }
+
+  // Map the diagonal paths
+  let leftTopPosition = currentPosition
+  let rightTopPosition = currentPosition
+  let leftBottomPosition = currentPosition
+  let rightBottomPosition = currentPosition
+
+  // top left
+  let didBreak = false
+  while (!didBreak) {
+    if (isOnLeftBoundary(leftTopPosition) || isOnTopBoundary(leftTopPosition)) {
+      didBreak = true
+      break
+    }
+
+    leftTopPosition = leftTopPosition - (8 * 1) - 1
+    const pieceAtNextPosition = invertedPieces.get(leftTopPosition)
+
+    if (pieceAtNextPosition !== undefined) {
+      if (piecesBelongToSameTeam(pieceAtNextPosition, pieceId)) {
+        break
+      } else {
+        positions.push(leftTopPosition)
+        break
+      }
+    }
+    
+    positions.push(leftTopPosition)
+  }
+
+  // top right
+  didBreak = false
+  while (!didBreak) {
+    if (isOnRightBoundary(rightTopPosition) || isOnTopBoundary(rightTopPosition)) {
+      didBreak = true
+      break
+    }
+
+    rightTopPosition = rightTopPosition - (8 * 1) + 1
+    const pieceAtNextPosition = invertedPieces.get(rightTopPosition)
+
+    if (pieceAtNextPosition !== undefined) {
+      if (piecesBelongToSameTeam(pieceAtNextPosition, pieceId)) {
+        break
+      } else {
+        positions.push(rightTopPosition)
+        break
+      }
+    }
+
+    positions.push(rightTopPosition)
+  }
+
+  // bottom left
+  didBreak = false
+  while (!didBreak) {
+    if (isOnLeftBoundary(leftBottomPosition) || isOnBottomBoundary(leftBottomPosition)) {
+      didBreak = true
+      break
+    }
+
+    leftBottomPosition = leftBottomPosition + (8 * 1) - 1
+    const pieceAtNextPosition = invertedPieces.get(leftBottomPosition)
+
+    if (pieceAtNextPosition !== undefined) {
+      if (piecesBelongToSameTeam(pieceAtNextPosition, pieceId)) {
+        break
+      } else {
+        positions.push(leftBottomPosition)
+        break
+      }
+    }
+
+    positions.push(leftBottomPosition)
+  }
+
+  // bottom right
+  didBreak = false
+  while (!didBreak) {
+    if (isOnRightBoundary(rightBottomPosition) || isOnBottomBoundary(rightBottomPosition)) {
+      didBreak = true
+      break
+    }
+
+    rightBottomPosition = rightBottomPosition + (8 * 1) + 1
+    const pieceAtNextPosition = invertedPieces.get(rightBottomPosition)
+
+    if (pieceAtNextPosition !== undefined) {
+      if (piecesBelongToSameTeam(pieceAtNextPosition, pieceId)) {
+        break
+      } else {
+        positions.push(rightBottomPosition)
+        break
+      }
+    }
+   
+    positions.push(rightBottomPosition)
+  }
+
+
+  return positions
 }
 
 // Get a color from a piece id
