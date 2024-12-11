@@ -22,10 +22,38 @@ body {
 
 .dashboard-container {
   background-color: white;
-  display: flex;
   flex: 1;
   padding: 1rem;
   margin-left: 1rem;
+}
+
+.dashboard-captures {
+  display: flex;
+}
+
+.white-captures {
+  background-color: #efefef;
+  flex: 1;
+  padding: 1rem;
+  margin-right: 1rem;
+}
+
+.white-captures h2 {
+  color: #000;
+}
+
+.black-captures {
+  background-color: #efefef;
+  flex: 1;
+  padding: 1rem;
+}
+
+.black-captures h2 {
+  color: #000;
+}
+
+.dashboard-captures {
+  display: flex;
 }
 
 .dashboard-title {
