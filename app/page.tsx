@@ -19,7 +19,7 @@ export default function Home() {
         <Gameboard piecePositions={pieceState} onPiecePositionChange={setPieceState} />
         <div className="status-container">
           <div>
-            <p>black turn</p>
+            <p className="turn-identifier-black">Black turn</p>
           </div>
           <button className="reset-btn" onClick={handleResetClick} type="button">Reset</button>
         </div>
