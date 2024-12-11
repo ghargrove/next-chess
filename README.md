@@ -21,3 +21,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser and start 
 - Allowing users to theme the board
 - Starting the game from a library of setups (blitzkrieg, etc)
 - Implement more complex moves (castling, etc)
+
+### Other code todo:
+
+- write more robust path generation tests (more than just the pawn)
