@@ -97,9 +97,10 @@ function movePawn(
     // If the pawn is still in it's intial position, allow it to move 2
     if (
       !invertedPieces.has(onePositionForward) &&
+      !invertedPieces.has(onePositionForward + 8) && 
       currentPosition === initialState[pieceId]
     ) {
-      positions.push(currentPosition + 8 * 2);
+      positions.push(onePositionForward + 8);
     }
 
     // Don't try to capture to the left if we're on the left boundary
@@ -150,9 +151,10 @@ function movePawn(
     // If the pawn is still in it's intial position, allow it to move 2
     if (
       !invertedPieces.has(onePositionForward) &&
+      !invertedPieces.has(onePositionForward - 8) &&
       currentPosition === initialState[pieceId]
     ) {
-      positions.push(currentPosition - 8 * 2);
+      positions.push(onePositionForward - 8);
     }
 
     if (!isOnLeftBoundary(currentPosition)) {
