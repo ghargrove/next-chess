@@ -23,24 +23,27 @@ body {
 .layout {
   padding: 1rem;
   background-color: #efefef;
+  height: 100vh;
 }
 
 .checkerboard {
   display: grid;
-  grid-template-columns: repeat(8, 100px);
+  grid-template-columns: repeat(8, 75px);
 }
 
 .square {
-  height: 100px;
-  width: 100px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  height: 75px;
 }
 
 .black-square {
-  background-color: #000;
+  background-color: #418794;
   color: #fff;
 }
 
 .white-square {
   background-color: #fff;
-  color: #000;
+  color: #418794;
 }
