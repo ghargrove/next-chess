@@ -143,7 +143,7 @@ export default function Home() {
           </button>
         </div>
       </div>
-      <Dashboard capturedPieces={capturedPieces} />
+      <Dashboard capturedPieces={capturedPieces} inCheck={inCheck} />
     </div>
   );
 }

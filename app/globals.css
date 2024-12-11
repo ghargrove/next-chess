@@ -117,3 +117,11 @@ body {
   font-weight: 600;
   padding: 0.5rem;
 }
+
+.check-warning {
+  background-color: #586b3e8c;
+  color: white;
+  font-weight: 700;
+  margin-top: 1rem;
+  padding: 1rem;
+}
