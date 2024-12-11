@@ -486,13 +486,9 @@ gameState: Partial<Record<PieceId, number>>
   }
 
   // Map the diagonal paths
-  const leftTopPath: number[] = []
   let leftTopPosition = currentPosition
-  const rightTopPath: number[] = []
   let rightTopPosition = currentPosition
-  const leftBottomPath: number[] = []
   let leftBottomPosition = currentPosition
-  const rightBottomPath: number[] = []
   let rightBottomPosition = currentPosition
 
   // top left
