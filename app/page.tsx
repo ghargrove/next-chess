@@ -3,7 +3,7 @@
 import React, { useEffect, useReducer } from "react";
 import { Dashboard, Gameboard } from "./components";
 import { PieceId } from "./components/GamePiece";
-import { blitzkriegState, initialState } from "./data";
+import { blitzkriegState, blitzkriegStateReverse, initialState } from "./data";
 import { areKingsInCheck } from "./check-check";
 
 /** Represents game state */
@@ -43,7 +43,7 @@ function reducer(state: State, action: Action): State {
       [pieceId]: position,
     };
 
-    // Given the next state of the board,
+    // Given the next state of the board, determine if the kings are in check
     const [kingColor, isCheckmate] = areKingsInCheck(nextActivePieces);
     let inCheck: "black" | "white" | null = null;
     if (kingColor === "black") {
@@ -84,7 +84,7 @@ export default function Home() {
     { activePieces, capturedPieces, inCheck, inCheckMate, turn },
     dispatch,
   ] = useReducer(reducer, {
-    activePieces: blitzkriegState,
+    activePieces: blitzkriegStateReverse,
     capturedPieces: [],
     inCheck: null,
     inCheckMate: false,
