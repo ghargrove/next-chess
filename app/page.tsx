@@ -127,6 +127,7 @@ export default function Home() {
     <div className="layout">
       <div>
         <Gameboard
+        debug
           currentTurn={turn}
           piecePositions={activePieces}
           onPiecePositionChange={handlePiecePositionChange}

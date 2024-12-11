@@ -95,7 +95,10 @@ function movePawn(
       : [onePositionForward];
 
     // If the pawn is still in it's intial position, allow it to move 2
-    if (currentPosition === initialState[pieceId]) {
+    if (
+      !invertedPieces.has(onePositionForward) &&
+      currentPosition === initialState[pieceId]
+    ) {
       positions.push(currentPosition + 8 * 2);
     }
 
@@ -145,7 +148,10 @@ function movePawn(
       : [currentPosition - 8];
 
     // If the pawn is still in it's intial position, allow it to move 2
-    if (currentPosition === initialState[pieceId]) {
+    if (
+      !invertedPieces.has(onePositionForward) &&
+      currentPosition === initialState[pieceId]
+    ) {
       positions.push(currentPosition - 8 * 2);
     }
 
