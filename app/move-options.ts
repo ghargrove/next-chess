@@ -477,8 +477,74 @@ function moveKnight(
 function moveBishop(pieceId: PieceId,
 gameState: Partial<Record<PieceId, number>>
 ): number[] {
+  const positions: number[] = [];
+  const currentPosition = gameState[pieceId];
+  const invertedPieces = invertAndMapPieceState(gameState);
 
-  return []
+  if (currentPosition === undefined) {
+    throw new Error("Piece trying to be moved is not active");
+  }
+
+  // Map the diagonal paths
+  const leftTopPath: number[] = []
+  let leftTopPosition = currentPosition
+  const rightTopPath: number[] = []
+  let rightTopPosition = currentPosition
+  const leftBottomPath: number[] = []
+  let leftBottomPosition = currentPosition
+  const rightBottomPath: number[] = []
+  let rightBottomPosition = currentPosition
+
+  // top left
+  let didBreak = false
+  while (!didBreak) {
+    if (isOnLeftBoundary(leftTopPosition) || isOnTopBoundary(leftTopPosition)) {
+      didBreak = true
+      break
+    }
+
+    leftTopPosition = leftTopPosition - (8 * 1) - 1
+    positions.push(leftTopPosition)
+  }
+
+  // top right
+  didBreak = false
+  while (!didBreak) {
+    if (isOnRightBoundary(rightTopPosition) || isOnTopBoundary(rightTopPosition)) {
+      didBreak = true
+      break
+    }
+
+    rightTopPosition = rightTopPosition - (8 * 1) + 1
+    positions.push(rightTopPosition)
+  }
+
+  // bottom left
+  didBreak = false
+  while (!didBreak) {
+    if (isOnLeftBoundary(leftBottomPosition) || isOnBottomBoundary(leftBottomPosition)) {
+      didBreak = true
+      break
+    }
+
+    leftBottomPosition = leftBottomPosition + (8 * 1) - 1
+    positions.push(leftBottomPosition)
+  }
+
+  // bottom left
+  didBreak = false
+  while (!didBreak) {
+    if (isOnRightBoundary(rightBottomPosition) || isOnBottomBoundary(rightBottomPosition)) {
+      didBreak = true
+      break
+    }
+
+    rightBottomPosition = rightBottomPosition + (8 * 1) + 1
+    positions.push(rightBottomPosition)
+  }
+
+
+  return positions
 }
 
 // Get a color from a piece id
