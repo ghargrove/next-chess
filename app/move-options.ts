@@ -10,6 +10,7 @@ const pawnRegex = /^(blk|wh)-p([1-8])$/;
 const rookRegex = /^(blk|wh)-r[1-2]$/;
 const knightRegex = /^(blk|wh)-kn[1-2]$/;
 const bishopRegex = /^(blk|wh)-b[1-2]$/;
+const queenRegex = /^(blk|wh)-q$/;
 
 /**
  * Inverts the key/value pairs from the active pieces hash and converts to a Map
@@ -44,6 +45,13 @@ export function calculateGamePieceMoves(
 
   if (bishopRegex.test(pieceId)) {
     return moveBishop(pieceId, gameState).sort();
+  }
+
+  if (queenRegex.test(pieceId)) {
+    return [
+      ...moveBishop(pieceId, gameState),
+      ...moveRook(pieceId, gameState)
+    ].sort();
   }
 
   return [];
