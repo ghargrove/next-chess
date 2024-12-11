@@ -26,6 +26,9 @@ export const Gameboard: React.FC<GameboardProps> = (props) => {
     onPiecePositionChange,
   } = props;
 
+  // Tracks which cells are legal moves during a drag operation
+  const [legalMoves, setLegalMoves] = useState<number[]>([])
+
   const invertedPieces = Array.from(
     Object.entries(piecePositions) as [PieceId, number][]
   ).map<[number, PieceId]>(([k, v]) => [v, k]);
@@ -62,7 +65,9 @@ export const Gameboard: React.FC<GameboardProps> = (props) => {
     const { pieceId } = evt.currentTarget.dataset;
     if (pieceId !== undefined) {
       evt.dataTransfer.setData("text/plain", pieceId);
-    }
+
+      setLegalMoves(calculateGamePieceMoves(pieceId as PieceId, piecePositions))
+    }    
   };
 
   const handleDragOver: (
@@ -72,8 +77,6 @@ export const Gameboard: React.FC<GameboardProps> = (props) => {
 
     evt.preventDefault();
   };
-
-  // First pass we should just move items. Who cares about rules
 
   const handleDrop: (pos: number) => React.DragEventHandler<HTMLDivElement> =
     (pos) => (evt) => {
@@ -106,7 +109,7 @@ export const Gameboard: React.FC<GameboardProps> = (props) => {
           return (
             <div
               key={rowIdx + "-" + colIdx}
-              className={`square ${col}`}
+              className={`square ${col} ${legalMoves.includes(boardPos) ? 'highlight-square' : ''}`}
               onDragOver={handleDragOver(boardPos)}
               onDrop={handleDrop(boardPos)}
             >

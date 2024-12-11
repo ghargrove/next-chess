@@ -96,6 +96,10 @@ body {
   color: #418794;
 }
 
+.highlight-square {
+  background-color: yellow;
+}
+
 .status-container {
   display: flex;
   justify-content: space-between;
