@@ -65,12 +65,7 @@ export default function Home() {
   const [{ activePieces, capturedPieces, turn }, dispatch] = useReducer(
     reducer,
     {
-      activePieces: {
-        ...initialState,
-        'wh-kn2': 28,
-        'wh-p6': 22,
-        'blk-p6': undefined
-      },
+      activePieces: initialState,
       capturedPieces: [],
       turn: "white",
     }
