@@ -8,6 +8,8 @@ type SquareType = "black-square" | "white-square";
 
 
 interface GameboardProps {
+  /** Display position information */
+  debug?: boolean
   /** Describes where on the board the pieces are positioned */
   piecePositions: Record<PieceId, number>
   /** Update the piece position */
@@ -16,7 +18,7 @@ interface GameboardProps {
 
 /** Presents a gameboard */
 export const Gameboard: React.FC<GameboardProps> = (props) => {
-  const { piecePositions, onPiecePositionChange } = props
+  const { debug = false, piecePositions, onPiecePositionChange } = props
   
   
   const invertedPieces = Array.from(
@@ -94,6 +96,7 @@ export const Gameboard: React.FC<GameboardProps> = (props) => {
               onDragOver={handleDragOver(boardPos)}
               onDrop={handleDrop(boardPos)}
             >
+              {debug && boardPos}
               {pieceId !== undefined && (
                 <div draggable data-piece-id={pieceId} onDragStart={handleDrag}>
                   <GamePiece pieceId={pieceId} />

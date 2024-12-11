@@ -16,7 +16,7 @@ export default function Home() {
   return (
     <div className="layout">
       <div>
-        <Gameboard piecePositions={pieceState} onPiecePositionChange={setPieceState} />
+        <Gameboard debug piecePositions={pieceState} onPiecePositionChange={setPieceState} />
         <div className="status-container">
           <div>
             <p className="turn-identifier-black">Black turn</p>
