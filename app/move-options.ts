@@ -500,10 +500,21 @@ gameState: Partial<Record<PieceId, number>>
     }
 
     leftTopPosition = leftTopPosition - (8 * 1) - 1
+    const pieceAtNextPosition = invertedPieces.get(leftTopPosition)
+
+    if (pieceAtNextPosition !== undefined) {
+      if (piecesBelongToSameTeam(pieceAtNextPosition, pieceId)) {
+        break
+      } else {
+        positions.push(leftTopPosition)
+        break
+      }
+    }
+    
     positions.push(leftTopPosition)
   }
 
-  // top right
+  // // top right
   didBreak = false
   while (!didBreak) {
     if (isOnRightBoundary(rightTopPosition) || isOnTopBoundary(rightTopPosition)) {
@@ -512,6 +523,17 @@ gameState: Partial<Record<PieceId, number>>
     }
 
     rightTopPosition = rightTopPosition - (8 * 1) + 1
+    const pieceAtNextPosition = invertedPieces.get(rightTopPosition)
+
+    if (pieceAtNextPosition !== undefined) {
+      if (piecesBelongToSameTeam(pieceAtNextPosition, pieceId)) {
+        break
+      } else {
+        positions.push(rightTopPosition)
+        break
+      }
+    }
+
     positions.push(rightTopPosition)
   }
 
@@ -524,10 +546,21 @@ gameState: Partial<Record<PieceId, number>>
     }
 
     leftBottomPosition = leftBottomPosition + (8 * 1) - 1
+    const pieceAtNextPosition = invertedPieces.get(leftBottomPosition)
+
+    if (pieceAtNextPosition !== undefined) {
+      if (piecesBelongToSameTeam(pieceAtNextPosition, pieceId)) {
+        break
+      } else {
+        positions.push(leftBottomPosition)
+        break
+      }
+    }
+
     positions.push(leftBottomPosition)
   }
 
-  // bottom left
+  // bottom right
   didBreak = false
   while (!didBreak) {
     if (isOnRightBoundary(rightBottomPosition) || isOnBottomBoundary(rightBottomPosition)) {
@@ -536,6 +569,17 @@ gameState: Partial<Record<PieceId, number>>
     }
 
     rightBottomPosition = rightBottomPosition + (8 * 1) + 1
+    const pieceAtNextPosition = invertedPieces.get(rightBottomPosition)
+
+    if (pieceAtNextPosition !== undefined) {
+      if (piecesBelongToSameTeam(pieceAtNextPosition, pieceId)) {
+        break
+      } else {
+        positions.push(rightBottomPosition)
+        break
+      }
+    }
+   
     positions.push(rightBottomPosition)
   }
 
