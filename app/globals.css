@@ -20,10 +20,25 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-.layout {
+.dashboard-container {
+  background-color: white;
+  display: flex;
+  flex: 1;
   padding: 1rem;
+  margin-left: 1rem;
+}
+
+.dashboard-title {
+  color: rgb(81, 81, 81);
+  font-weight: 700;
+  font-size: 2rem;
+}
+
+.layout {
   background-color: #efefef;
+  display: flex;
   height: 100vh;
+  padding: 1rem;
 }
 
 .checkerboard {
@@ -46,4 +61,22 @@ body {
 .white-square {
   background-color: #fff;
   color: #418794;
+}
+
+.status-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.status-container .turn-identifier-black {
+  color: rgb(81, 81, 81);
+  font-weight: 600;
+}
+
+.reset-btn {
+  background-color: #c12a90;
+  border-radius: 4px;
+  font-weight: 600;
+  padding: 0.5rem;
 }
