@@ -5,6 +5,8 @@ import {
   isOnRightBoundary,
   isOnTopBoundary,
 } from "./boundary-checks";
+import { initialState } from "./data";
+
 const colorRegEx = /^(blk|wh)-.*$/;
 const pawnRegex = /^(blk|wh)-p([1-8])$/;
 const rookRegex = /^(blk|wh)-r[1-2]$/;
@@ -92,6 +94,11 @@ function movePawn(
       ? []
       : [onePositionForward];
 
+    // If the pawn is still in it's intial position, allow it to move 2
+    if (currentPosition === initialState[pieceId]) {
+      positions.push(currentPosition + 8 * 2);
+    }
+
     // Don't try to capture to the left if we're on the left boundary
     if (!isOnLeftBoundary(currentPosition)) {
       const pieceToLeft = invertedPieces.get(onePositionForward - 1);
@@ -136,6 +143,11 @@ function movePawn(
     const positions = invertedPieces.has(onePositionForward)
       ? []
       : [currentPosition - 8];
+
+    // If the pawn is still in it's intial position, allow it to move 2
+    if (currentPosition === initialState[pieceId]) {
+      positions.push(currentPosition - 8 * 2);
+    }
 
     if (!isOnLeftBoundary(currentPosition)) {
       const pieceToLeft = invertedPieces.get(onePositionForward - 1);
