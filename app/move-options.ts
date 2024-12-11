@@ -174,10 +174,17 @@ function moveRook(
 
   // Handle squares to the left
   if (!isOnLeftBoundary(currentPosition)) {
+    let didBreakOnPiece = false
     let nextLeftPosition = currentPosition - 1;
 
     while (!isOnLeftBoundary(nextLeftPosition)) {
-      if (invertedPieces.has(nextLeftPosition)) {
+      const pieceAtNextPosition = invertedPieces.get(nextLeftPosition);
+      if (pieceAtNextPosition !== undefined) {
+        if (!piecesBelongToSameTeam(pieceId, pieceAtNextPosition)) {
+          positions.push(nextLeftPosition);
+        }
+
+        didBreakOnPiece = true
         break;
       }
 
@@ -185,23 +192,33 @@ function moveRook(
     }
 
     // Once we're on the left boundary we're going to bail. Add the left boundary item here
-    positions.push(nextLeftPosition--);
+    if (!didBreakOnPiece) {
+      positions.push(nextLeftPosition--);
+    }
   }
 
   // Handle squares to the right
   if (!isOnRightBoundary(currentPosition)) {
+    let didBreakOnPiece = false;
     let nextRightPosition = currentPosition + 1;
 
     while (!isOnRightBoundary(nextRightPosition)) {
-      if (invertedPieces.has(nextRightPosition)) {
+      const pieceAtNextPosition = invertedPieces.get(nextRightPosition);
+      if (pieceAtNextPosition !== undefined) {
+        if (!piecesBelongToSameTeam(pieceId, pieceAtNextPosition)) {
+          positions.push(nextRightPosition);
+        }
+
+        didBreakOnPiece = true
         break;
       }
 
       positions.push(nextRightPosition++);
     }
 
-    // Once we're on the left boundary we're going to bail. Add the left boundary item here
-    positions.push(nextRightPosition++);
+    if (!didBreakOnPiece) {
+      positions.push(nextRightPosition++);
+    }
   }
 
   // Handle vertical up
