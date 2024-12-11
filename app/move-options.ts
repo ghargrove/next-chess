@@ -164,14 +164,6 @@ function moveRook(
     throw new Error("Piece trying to be moved is not active");
   }
 
-  // Get the color from the rook
-  const rookMatch = rookRegex.exec(pieceId);
-  if (rookMatch === null) {
-    throw new Error("No pawn match found");
-  }
-
-  const [_, color] = rookMatch;
-
   // Handle squares to the left
   if (!isOnLeftBoundary(currentPosition)) {
     let didBreakOnPiece = false
