@@ -138,7 +138,7 @@ export default function Home() {
             </p>
           </div>
           <button
-            className="reset-btn"
+            className="reset-btn text-white"
             onClick={handleResetClick}
             type="button"
           >
