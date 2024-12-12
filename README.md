@@ -1,13 +1,15 @@
 
 ## Chess <> React
 
-![Chess board](/game-image.png)
-
 This project started from a tech assessment where I was tasked with creating a checker board.
 
 I though it would be fun to take that foundation and build a fully featured chess game.
 
 It turned into a little hack-a-thon project I did over an evening.
+
+![Chess board](/game-image.png)
+
+
 
 ### Running the app
 

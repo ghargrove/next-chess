@@ -84,7 +84,7 @@ export default function Home() {
     { activePieces, capturedPieces, inCheck, inCheckMate, turn },
     dispatch,
   ] = useReducer(reducer, {
-    activePieces: blitzkriegStateReverse,
+    activePieces: initialState,
     capturedPieces: [],
     inCheck: null,
     inCheckMate: false,
