@@ -28,6 +28,23 @@ export default function Home() {
     }
   }, [dispatch, inCheck, inCheckMate]);
 
+  useEffect(() => {
+    if (turn === 'black') {
+      const randomWait = Math.ceil(Math.random() * 3)
+
+      setTimeout(() => {
+        // Loop through all blk entries and generate paths
+        // Determine if there is competitor piece at any of them
+        // Capture a random piece or select a random move
+
+        
+
+
+      }, randomWait * 1000)
+    }
+
+  }, [turn])
+
   // Reset the board when a user clicks this button
   const handleResetClick: React.MouseEventHandler<HTMLButtonElement> = (
     evt
