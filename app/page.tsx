@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useReducer } from "react";
+import React, { useCallback, useEffect, useReducer } from "react";
 
 import { Dashboard, Gameboard } from "./components";
 import { PieceId } from "./components/GamePiece";
@@ -33,6 +33,19 @@ export default function Home() {
     inCheckMate: false,
     turn: "white",
   });
+
+  // Move the piece identifierd by `pieceId`
+  const handlePiecePositionChange = useCallback(
+    (pieceId: PieceId, position: number, pieceCaptured?: PieceId) => {
+      dispatch({
+        pieceCaptured,
+        pieceId,
+        position,
+        type: "UPDATE_PIECE_POSITION",
+      });
+    },
+    [dispatch]
+  );
 
   // If the `inCheckMate` state becomes true, the game is over. Show a native modal
   useEffect(() => {
@@ -130,12 +143,12 @@ export default function Home() {
         .reverse()
         .map((score) => moveSetMap.get(score) as Array<MoveSet>);
 
-      const randomIdx = Math.floor(Math.random() * (bestMoves.length + 1))
+      const randomIdx = Math.floor(Math.random() * bestMoves.length);
+      const [pieceToMove, nextPosition, pieceToCapture] = bestMoves[randomIdx];
 
-      console.log(bestMoves)
-      console.log(randomIdx)
+      handlePiecePositionChange(pieceToMove, nextPosition, pieceToCapture ?? undefined)
     }, randomWait * 1000);
-  }, [activePieces, turn]);
+  }, [activePieces, handlePiecePositionChange, turn]);
 
   // Reset the board when a user clicks this button
   const handleResetClick: React.MouseEventHandler<HTMLButtonElement> = (
@@ -144,20 +157,6 @@ export default function Home() {
     evt.preventDefault();
 
     dispatch({ type: "RESET_GAME" });
-  };
-
-  // Move the piece identifierd by `pieceId`
-  const handlePiecePositionChange = (
-    pieceId: PieceId,
-    position: number,
-    pieceCaptured?: PieceId
-  ) => {
-    dispatch({
-      pieceCaptured,
-      pieceId,
-      position,
-      type: "UPDATE_PIECE_POSITION",
-    });
   };
 
   return (
