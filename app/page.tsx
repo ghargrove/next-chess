@@ -7,6 +7,8 @@ import { PieceId } from "./components/GamePiece";
 import { initialState } from "./data";
 import { reducer } from "./reducer";
 
+import { calculateGamePieceMoves } from "./move-options";
+
 export default function Home() {
   const [
     { activePieces, capturedPieces, inCheck, inCheckMate, turn },
@@ -29,21 +31,27 @@ export default function Home() {
   }, [dispatch, inCheck, inCheckMate]);
 
   useEffect(() => {
-    if (turn === 'black') {
-      const randomWait = Math.ceil(Math.random() * 3)
+    if (turn !== 'black') {
+      return 
+    }
+
+    const randomWait = Math.ceil(Math.random() * 3)
 
       setTimeout(() => {
         // Loop through all blk entries and generate paths
         // Determine if there is competitor piece at any of them
         // Capture a random piece or select a random move
 
-        
+        const blackPieces = Object.keys(activePieces).filter(pieceId => /blk/.test(pieceId))
+        for (const piece of blackPieces) {
+          console.log(piece)
+          console.log(calculateGamePieceMoves((piece as PieceId), activePieces))
+        }
 
 
       }, randomWait * 1000)
-    }
 
-  }, [turn])
+  }, [activePieces, turn])
 
   // Reset the board when a user clicks this button
   const handleResetClick: React.MouseEventHandler<HTMLButtonElement> = (
