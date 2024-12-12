@@ -29,7 +29,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser and start 
 ### Other features to consider
 
 - Tracking move history
-- Having a simple AI player
+- ✅ Having a simple AI player (done)
 - Allowing users to choose sides
 - Allowing users to theme the board
 - Starting the game from a library of setups (blitzkrieg, etc)

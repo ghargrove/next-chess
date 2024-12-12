@@ -34,31 +34,32 @@ export function calculateGamePieceMoves(
   pieceId: PieceId,
   gameState: Partial<Record<PieceId, number>>
 ): number[] {
+  const negativeFilter: (value: number) => boolean = (value) => value >= 0;
+
   if (pawnRegex.test(pieceId)) {
-    return movePawn(pieceId, gameState).sort();
+    return movePawn(pieceId, gameState).filter(negativeFilter).sort();
   }
 
   if (rookRegex.test(pieceId)) {
-    return moveRook(pieceId, gameState).sort();
+    return moveRook(pieceId, gameState).filter(negativeFilter).sort();
   }
 
   if (knightRegex.test(pieceId)) {
-    return moveKnight(pieceId, gameState).sort();
+    return moveKnight(pieceId, gameState).filter(negativeFilter).sort();
   }
 
   if (bishopRegex.test(pieceId)) {
-    return moveBishop(pieceId, gameState).sort();
+    return moveBishop(pieceId, gameState).filter(negativeFilter).sort();
   }
 
   if (queenRegex.test(pieceId)) {
-    return [
-      ...moveBishop(pieceId, gameState),
-      ...moveRook(pieceId, gameState),
-    ].sort();
+    return [...moveBishop(pieceId, gameState), ...moveRook(pieceId, gameState)]
+      .filter(negativeFilter)
+      .sort();
   }
 
   if (kingRegex.test(pieceId)) {
-    return moveKing(pieceId, gameState).sort();
+    return moveKing(pieceId, gameState).filter(negativeFilter).sort();
   }
 
   return [];
@@ -97,7 +98,7 @@ function movePawn(
     // If the pawn is still in it's intial position, allow it to move 2
     if (
       !invertedPieces.has(onePositionForward) &&
-      !invertedPieces.has(onePositionForward + 8) && 
+      !invertedPieces.has(onePositionForward + 8) &&
       currentPosition === initialState[pieceId]
     ) {
       positions.push(onePositionForward + 8);
