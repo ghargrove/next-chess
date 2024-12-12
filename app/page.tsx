@@ -19,8 +19,8 @@ import {
  * 1 = space to move to
  * 2 = piece that would be captured at that space (optional)
  * 3 = value of optional captured piece
-*/
-type MoveSet = [PieceId, number, PieceId | null, number]
+ */
+type MoveSet = [PieceId, number, PieceId | null, number];
 
 export default function Home() {
   const [
@@ -98,25 +98,42 @@ export default function Home() {
             }
           }
         }
-
-        // This works
-        // console.log(piece);
-        console.log(d);
-
-        const movesSortedByWeight = []
-
-        // Group these into a sub array where < index == more value
-        // Grab a random value from the 0 index and move there
-        // [
-        //   [
-        //     ['blk-b2', 40, 'wh-p1', 1]
-        //   ],
-        //   [
-        //     ['blk-p1', 24, null, 0],
-        //     ['blk-p3', 26, null, 0]
-        //   ]
-        // ]
       }
+
+      // Group these into an array where < index == more value
+      // Grab a random value from the 0 index and move there
+      // [
+      //   [
+      //     ['blk-b2', 40, 'wh-p1', 1]
+      //   ],
+      //   [
+      //     ['blk-p1', 24, null, 0],
+      //     ['blk-p3', 26, null, 0]
+      //   ]
+      // ]
+      // const movesSortedByWeight: Array<MoveSet[]> = []
+      const moveSetMap: Map<number, MoveSet[]> = new Map();
+      for (const moveSet of d) {
+        // Get the array of moves corresponding w/ this score
+        const scoreGroup = moveSetMap.get(moveSet[3]);
+
+        // If The score group doesn't exist, then create one
+        if (scoreGroup === undefined) {
+          moveSetMap.set(moveSet[3], [moveSet]);
+        } else {
+          moveSetMap.set(moveSet[3], [...scoreGroup, moveSet]);
+        }
+      }
+
+      const [bestMoves] = Array.from(moveSetMap.keys())
+        .sort()
+        .reverse()
+        .map((score) => moveSetMap.get(score) as Array<MoveSet>);
+
+      const randomIdx = Math.floor(Math.random() * (bestMoves.length + 1))
+
+      console.log(bestMoves)
+      console.log(randomIdx)
     }, randomWait * 1000);
   }, [activePieces, turn]);
 
