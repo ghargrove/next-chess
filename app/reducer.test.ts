@@ -35,3 +35,25 @@ it("presents a default state", () => {
     );
   }
 });
+
+it('allows a piece to be captured', () => {
+  const currentState: State = {
+    activePieces: blitzkriegState,
+    capturedPieces: [],
+    inCheck: null,
+    inCheckMate: false,
+    turn: 'white'
+  }
+
+  const nextState = reducer(currentState, {
+    type: 'UPDATE_PIECE_POSITION',
+    pieceId: 'wh-q',
+    position: 10,
+    pieceCaptured: 'blk-p3'
+  })
+
+  expect(nextState.inCheck).toBe('black')
+  expect(nextState.inCheckMate).toBe(true)
+  expect(nextState.capturedPieces).toContain('blk-p3')
+  expect(nextState.activePieces['wh-q']).toBe(10)
+})

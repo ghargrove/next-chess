@@ -4,15 +4,15 @@ import React, { useEffect, useReducer } from "react";
 
 import { Dashboard, Gameboard } from "./components";
 import { PieceId } from "./components/GamePiece";
-import { blitzkriegState, initialState } from "./data";
-import { reducer } from './reducer'
+import { initialState } from "./data";
+import { reducer } from "./reducer";
 
 export default function Home() {
   const [
     { activePieces, capturedPieces, inCheck, inCheckMate, turn },
     dispatch,
   ] = useReducer(reducer, {
-    activePieces: blitzkriegState,
+    activePieces: initialState,
     capturedPieces: [],
     inCheck: null,
     inCheckMate: false,
@@ -55,7 +55,6 @@ export default function Home() {
     <div className="layout">
       <div>
         <Gameboard
-        debug
           currentTurn={turn}
           piecePositions={activePieces}
           onPiecePositionChange={handlePiecePositionChange}
