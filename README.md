@@ -3,7 +3,13 @@
 
 ![Chess board](/game-image.png)
 
-Wanted to play around with React a bit. So I built a chess game ♟️.
+This project started from a tech assessment where I was tasked with creating a checker board.
+
+I though it would be fun to take that foundation and build a fully featured chess game.
+
+It turned into a little hack-a-thon project I did over an evening.
+
+### Running the app
 
 To get started, download the depenedencies and run the development server:
 
