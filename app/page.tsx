@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useReducer } from "react";
 
 import { Dashboard, Gameboard } from "./components";
 import { PieceId } from "./components/GamePiece";
-import { initialState } from "./data";
+import { initialState, blitzkriegState, blitzkriegStateReverse } from "./data";
 import { findNextBestMove } from "./move-generator";
 import { reducer } from "./reducer";
 
@@ -13,7 +13,7 @@ export default function Home() {
     { activePieces, capturedPieces, inCheck, inCheckMate, turn },
     dispatch,
   ] = useReducer(reducer, {
-    activePieces: initialState,
+    activePieces: blitzkriegStateReverse,
     capturedPieces: [],
     inCheck: null,
     inCheckMate: false,
@@ -71,6 +71,7 @@ export default function Home() {
     <div className="layout">
       <div>
         <Gameboard
+        debug
           currentTurn={turn}
           piecePositions={activePieces}
           onPiecePositionChange={handlePiecePositionChange}
